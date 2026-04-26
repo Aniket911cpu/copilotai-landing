@@ -167,34 +167,7 @@ export default function SupportPage() {
               </div>
               
               <div className="glass-card p-8 border-white/10 relative">
-                <form className="space-y-6 relative z-10" onSubmit={(e) => { e.preventDefault(); alert('Message sent successfully!'); }}>
-                  <div className="grid grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-sm font-bold text-white">Name</label>
-                      <input type="text" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-accent-primary transition-all text-white" placeholder="John Doe" required />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-bold text-white">Email</label>
-                      <input type="email" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-accent-primary transition-all text-white" placeholder="john@example.com" required />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-white">Topic</label>
-                    <select className="w-full bg-[#08080C] border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-accent-primary transition-all text-white appearance-none">
-                      <option value="bug">Report a Bug</option>
-                      <option value="testimonial">Submit Testimonial</option>
-                      <option value="feedback">General Feedback</option>
-                      <option value="other">Other Inquiry</option>
-                    </select>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-white">Message</label>
-                    <textarea rows={5} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-accent-primary transition-all text-white resize-none" placeholder="How can we help?" required></textarea>
-                  </div>
-                  <button type="submit" className="w-full bg-accent-primary text-white font-bold py-4 rounded-xl hover:bg-accent-primary/90 transition-all shadow-lg shadow-accent-primary/20">
-                    Send Message
-                  </button>
-                </form>
+                <SupportForm />
               </div>
             </div>
           </div>
@@ -206,12 +179,12 @@ export default function SupportPage() {
               If you can&apos;t find what you&apos;re looking for, our human support team is ready to assist you.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-              <button className="px-10 py-4 bg-accent-primary text-white font-bold rounded-xl hover:bg-accent-primary/90 transition-all shadow-lg shadow-accent-primary/20">
+              <Link href="/contact" className="px-10 py-4 bg-accent-primary text-white font-bold rounded-xl hover:bg-accent-primary/90 transition-all shadow-lg shadow-accent-primary/20">
                 Contact Support
-              </button>
-              <button className="px-10 py-4 bg-white/5 text-white font-bold rounded-xl border border-white/10 hover:bg-white/10 transition-all">
+              </Link>
+              <Link href="#" className="px-10 py-4 bg-white/5 text-white font-bold rounded-xl border border-white/10 hover:bg-white/10 transition-all">
                 Join our Discord
-              </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -219,6 +192,89 @@ export default function SupportPage() {
 
       <Footer />
     </main>
+  );
+}
+
+function SupportForm() {
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      type: formData.get("topic"),
+      name: formData.get("name"),
+      email: formData.get("email"),
+      message: formData.get("message"),
+    };
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) throw new Error("Failed to send message");
+      
+      setSuccess(true);
+      (e.target as HTMLFormElement).reset();
+    } catch (err: any) {
+      setError(err.message || "An error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (success) {
+    return (
+      <div className="text-center p-8 bg-accent-green/10 border border-accent-green/20 rounded-xl h-full flex flex-col justify-center items-center relative z-10">
+        <h3 className="text-xl font-bold text-accent-green mb-2">Submitted Successfully!</h3>
+        <p className="text-text-muted mb-4">Thank you for your feedback. We review all submissions carefully.</p>
+        <button onClick={() => setSuccess(false)} className="text-sm text-white underline">Submit another</button>
+      </div>
+    );
+  }
+
+  return (
+    <form className="space-y-6 relative z-10" onSubmit={handleSubmit}>
+      {error && (
+        <div className="p-4 bg-accent-rose/10 border border-accent-rose/20 text-accent-rose rounded-xl text-sm">
+          {error}
+        </div>
+      )}
+      <div className="grid grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label className="text-sm font-bold text-white">Name</label>
+          <input name="name" type="text" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-accent-primary transition-all text-white" placeholder="John Doe" required disabled={loading} />
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm font-bold text-white">Email</label>
+          <input name="email" type="email" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-accent-primary transition-all text-white" placeholder="john@example.com" required disabled={loading} />
+        </div>
+      </div>
+      <div className="space-y-2">
+        <label className="text-sm font-bold text-white">Topic</label>
+        <select name="topic" className="w-full bg-[#08080C] border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-accent-primary transition-all text-white appearance-none" required disabled={loading}>
+          <option value="bug">Report a Bug</option>
+          <option value="testimonial">Submit Testimonial</option>
+          <option value="feedback">General Feedback</option>
+          <option value="other">Other Inquiry</option>
+        </select>
+      </div>
+      <div className="space-y-2">
+        <label className="text-sm font-bold text-white">Message</label>
+        <textarea name="message" rows={5} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-accent-primary transition-all text-white resize-none" placeholder="How can we help?" required disabled={loading}></textarea>
+      </div>
+      <button type="submit" disabled={loading} className="w-full bg-accent-primary text-white font-bold py-4 rounded-xl hover:bg-accent-primary/90 transition-all shadow-lg shadow-accent-primary/20 disabled:opacity-50 disabled:cursor-not-allowed">
+        {loading ? "Submitting..." : "Send Message"}
+      </button>
+    </form>
   );
 }
 

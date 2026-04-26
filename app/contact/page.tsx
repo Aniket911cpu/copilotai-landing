@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -55,34 +55,90 @@ export default function ContactPage() {
 
           <div className="glass-card p-12 border-white/5">
             <h2 className="text-3xl font-bold mb-8 text-center">Send a Message</h2>
-            <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); alert('Message sent successfully!'); }}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-white">First Name</label>
-                  <input type="text" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-accent-primary transition-all text-white" placeholder="John" required />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-white">Last Name</label>
-                  <input type="text" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-accent-primary transition-all text-white" placeholder="Doe" required />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-white">Email</label>
-                <input type="email" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-accent-primary transition-all text-white" placeholder="john@example.com" required />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-white">Message</label>
-                <textarea rows={6} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-accent-primary transition-all text-white resize-none" placeholder="How can we help you?" required></textarea>
-              </div>
-              <button type="submit" className="w-full bg-accent-primary text-white font-bold py-4 rounded-xl hover:bg-accent-primary/90 transition-all shadow-lg shadow-accent-primary/20">
-                Send Message
-              </button>
-            </form>
+            <ContactForm />
           </div>
         </div>
       </div>
       
       <Footer />
     </main>
+  );
+}
+
+function ContactForm() {
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      type: "contact",
+      name: `${formData.get("firstName")} ${formData.get("lastName")}`,
+      email: formData.get("email"),
+      message: formData.get("message"),
+    };
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) throw new Error("Failed to send message");
+      
+      setSuccess(true);
+      (e.target as HTMLFormElement).reset();
+    } catch (err: any) {
+      setError(err.message || "An error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (success) {
+    return (
+      <div className="text-center p-8 bg-accent-green/10 border border-accent-green/20 rounded-xl">
+        <h3 className="text-xl font-bold text-accent-green mb-2">Message Sent!</h3>
+        <p className="text-text-muted mb-4">We'll get back to you as soon as possible.</p>
+        <button onClick={() => setSuccess(false)} className="text-sm text-white underline">Send another message</button>
+      </div>
+    );
+  }
+
+  return (
+    <form className="space-y-6" onSubmit={handleSubmit}>
+      {error && (
+        <div className="p-4 bg-accent-rose/10 border border-accent-rose/20 text-accent-rose rounded-xl text-sm">
+          {error}
+        </div>
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label className="text-sm font-bold text-white">First Name</label>
+          <input name="firstName" type="text" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-accent-primary transition-all text-white" placeholder="John" required disabled={loading} />
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm font-bold text-white">Last Name</label>
+          <input name="lastName" type="text" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-accent-primary transition-all text-white" placeholder="Doe" required disabled={loading} />
+        </div>
+      </div>
+      <div className="space-y-2">
+        <label className="text-sm font-bold text-white">Email</label>
+        <input name="email" type="email" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-accent-primary transition-all text-white" placeholder="john@example.com" required disabled={loading} />
+      </div>
+      <div className="space-y-2">
+        <label className="text-sm font-bold text-white">Message</label>
+        <textarea name="message" rows={6} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-accent-primary transition-all text-white resize-none" placeholder="How can we help you?" required disabled={loading}></textarea>
+      </div>
+      <button type="submit" disabled={loading} className="w-full bg-accent-primary text-white font-bold py-4 rounded-xl hover:bg-accent-primary/90 transition-all shadow-lg shadow-accent-primary/20 disabled:opacity-50 disabled:cursor-not-allowed">
+        {loading ? "Sending..." : "Send Message"}
+      </button>
+    </form>
   );
 }

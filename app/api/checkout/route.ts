@@ -3,10 +3,10 @@ import { stripe } from "@/lib/stripe";
 
 export async function POST(req: Request) {
   try {
-    const { priceId, planName } = await req.json();
+    const { priceId, planName, userId } = await req.json();
 
-    if (!priceId) {
-      return new NextResponse("Price ID is required", { status: 400 });
+    if (!priceId || !userId) {
+      return new NextResponse("Price ID and User ID are required", { status: 400 });
     }
 
     const session = await stripe.checkout.sessions.create({
@@ -19,9 +19,10 @@ export async function POST(req: Request) {
       ],
       mode: "subscription",
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/#pricing`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/cancel`,
       metadata: {
         planName,
+        userId,
       },
     });
 
