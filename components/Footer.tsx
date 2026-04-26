@@ -45,14 +45,13 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Resources */}
           <div>
-            <h4 className="text-white font-bold mb-6">Resources</h4>
+            <h4 className="text-white font-bold mb-6">Support</h4>
             <ul className="space-y-4">
-              <li><Link href="#" className="text-text-muted hover:text-white text-sm transition-colors">Documentation</Link></li>
-              <li><Link href="#" className="text-text-muted hover:text-white text-sm transition-colors">API Reference</Link></li>
-              <li><Link href="#" className="text-text-muted hover:text-white text-sm transition-colors">Troubleshooting</Link></li>
-              <li><Link href="#" className="text-text-muted hover:text-white text-sm transition-colors">Roadmap</Link></li>
+              <li><Link href="#support" className="text-text-muted hover:text-white text-sm transition-colors">Report a Bug</Link></li>
+              <li><Link href="#support" className="text-text-muted hover:text-white text-sm transition-colors">Submit Testimonial</Link></li>
+              <li><Link href="#support" className="text-text-muted hover:text-white text-sm transition-colors">General Feedback</Link></li>
+              <li><Link href="#faq" className="text-text-muted hover:text-white text-sm transition-colors">FAQ</Link></li>
             </ul>
           </div>
 
@@ -74,7 +73,7 @@ export default function Footer() {
             © 2026 CopilotAI. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
-            <span className="text-text-muted text-xs font-mono">MIT License</span>
+            <span className="text-text-muted text-xs font-mono">Proprietary License</span>
             <div className="flex items-center gap-1.5">
               <div className="w-1.5 h-1.5 rounded-full bg-accent-green" />
               <span className="text-text-muted text-xs font-bold uppercase tracking-widest">Systems Operational</span>

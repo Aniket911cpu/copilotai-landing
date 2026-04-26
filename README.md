@@ -62,4 +62,4 @@ npm run start
 ```
 
 ## 📄 License
-This project is licensed under the MIT License.
+This project is licensed under a Proprietary License. All rights reserved.

@@ -13,6 +13,7 @@ const DemoMockup = dynamic(() => import("@/components/DemoMockup"), { ssr: false
 const Pricing = dynamic(() => import("@/components/Pricing"), { ssr: false });
 const Testimonials = dynamic(() => import("@/components/Testimonials"), { ssr: false });
 const FAQ = dynamic(() => import("@/components/FAQ"), { ssr: false });
+const SupportSection = dynamic(() => import("@/components/SupportSection"), { ssr: false });
 const CTABanner = dynamic(() => import("@/components/CTABanner"), { ssr: false });
 const Footer = dynamic(() => import("@/components/Footer"), { ssr: false });
 
@@ -33,6 +34,7 @@ export default function Home() {
           <Pricing />
           <Testimonials />
           <FAQ />
+          <SupportSection />
           <CTABanner />
         </div>
       </div>
