@@ -4,8 +4,12 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Monitor, Apple, Layout, Download, ArrowRight, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useOS } from "@/lib/useOS";
+import Link from "next/link";
 
 export default function AppDownload() {
+  const currentOS = useOS();
+
   return (
     <section className="py-24 relative overflow-hidden" id="download">
       <div className="container mx-auto px-6">
@@ -27,22 +31,39 @@ export default function AppDownload() {
                 Download the CopilotAI desktop application to enable real-time audio capture, invisible overlays, and sub-800ms latency. Sync your account once and win every interview.
               </p>
               
-              <div className="flex flex-wrap gap-4">
-                <button className="flex items-center gap-3 px-8 py-4 bg-white text-black rounded-2xl font-bold hover:bg-white/90 transition-all group">
+              <div className="flex flex-wrap gap-4 mb-8">
+                <Link 
+                  href="/download"
+                  className={cn(
+                    "flex items-center gap-3 px-8 py-4 rounded-2xl font-bold transition-all group",
+                    currentOS === "macos" ? "bg-white text-black scale-105 shadow-xl shadow-white/10" : "bg-white/5 border border-white/10 text-white hover:bg-white/10"
+                  )}
+                >
                   <Apple size={24} />
                   <div>
-                    <div className="text-[10px] text-black/50 uppercase leading-none mb-1">Download for</div>
-                    <div className="text-base leading-none">macOS (Apple Silicon)</div>
+                    <div className={cn("text-[10px] uppercase leading-none mb-1", currentOS === "macos" ? "text-black/50" : "text-white/50")}>Download for</div>
+                    <div className="text-base leading-none">macOS</div>
                   </div>
-                </button>
-                <button className="flex items-center gap-3 px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl font-bold hover:bg-white/10 transition-all group">
-                  <Layout size={24} className="text-accent-cyan" />
+                </Link>
+                <Link 
+                  href="/download"
+                  className={cn(
+                    "flex items-center gap-3 px-8 py-4 rounded-2xl font-bold transition-all group",
+                    currentOS === "windows" ? "bg-white text-black scale-105 shadow-xl shadow-white/10" : "bg-white/5 border border-white/10 text-white hover:bg-white/10"
+                  )}
+                >
+                  <Layout size={24} className={currentOS === "windows" ? "text-accent-primary" : "text-accent-cyan"} />
                   <div>
-                    <div className="text-[10px] text-white/50 uppercase leading-none mb-1">Download for</div>
-                    <div className="text-base leading-none">Windows 11</div>
+                    <div className={cn("text-[10px] uppercase leading-none mb-1", currentOS === "windows" ? "text-black/50" : "text-white/50")}>Download for</div>
+                    <div className="text-base leading-none">Windows</div>
                   </div>
-                </button>
+                </Link>
               </div>
+
+              <Link href="/download" className="inline-flex items-center gap-2 text-sm font-bold text-accent-primary hover:underline group">
+                View all platforms & requirements
+                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
 
               <div className="mt-12 flex items-center gap-6">
                 <div className="flex items-center gap-2 text-sm text-text-muted">
@@ -92,7 +113,7 @@ export default function AppDownload() {
                   
                   <div className="absolute bottom-6 left-6 right-6">
                     <div className="p-4 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
-                      <span className="text-xs text-text-muted">Audio Input: MacBook Pro Mic</span>
+                      <span className="text-xs text-text-muted">Audio Input: {currentOS === "macos" ? "MacBook Pro Mic" : "System Audio"}</span>
                       <div className="flex gap-1">
                         {[...Array(8)].map((_, i) => (
                           <div key={i} className="w-1 h-3 bg-accent-cyan/40 rounded-full animate-bounce" style={{ animationDelay: `${i * 0.1}s` }} />

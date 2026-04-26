@@ -3,8 +3,13 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Monitor, Apple, Terminal } from "lucide-react";
+import Link from "next/link";
+import { useOS } from "@/lib/useOS";
+import { cn } from "@/lib/utils";
 
 export default function CTABanner() {
+  const currentOS = useOS();
+
   return (
     <section className="py-24 relative overflow-hidden">
       {/* Background Radial Gradient */}
@@ -29,21 +34,33 @@ export default function CTABanner() {
           </p>
 
           <div className="flex flex-col items-center gap-8">
-            <button className="px-10 py-5 bg-accent-primary hover:bg-accent-primary/90 text-white rounded-2xl font-bold text-lg flex items-center gap-3 transition-all shadow-2xl shadow-accent-primary/40 hover:scale-105 active:scale-95">
+            <Link 
+              href="/download"
+              className="px-10 py-5 bg-accent-primary hover:bg-accent-primary/90 text-white rounded-2xl font-bold text-lg flex items-center gap-3 transition-all shadow-2xl shadow-accent-primary/40 hover:scale-105 active:scale-95"
+            >
               ⬇ Download CopilotAI Free
               <ArrowRight size={24} />
-            </button>
+            </Link>
 
             <div className="flex flex-wrap justify-center gap-6">
-              <div className="flex items-center gap-2 text-text-muted px-4 py-2 rounded-full bg-white/5 border border-white/5">
+              <div className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-500",
+                currentOS === "windows" ? "bg-accent-primary/20 border-accent-primary/50 text-white shadow-lg shadow-accent-primary/10 scale-110" : "bg-white/5 border-white/5 text-text-muted"
+              )}>
                 <Monitor size={16} />
                 <span className="text-xs font-bold uppercase tracking-wider">Windows</span>
               </div>
-              <div className="flex items-center gap-2 text-text-muted px-4 py-2 rounded-full bg-white/5 border border-white/5">
+              <div className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-500",
+                currentOS === "macos" ? "bg-accent-primary/20 border-accent-primary/50 text-white shadow-lg shadow-accent-primary/10 scale-110" : "bg-white/5 border-white/5 text-text-muted"
+              )}>
                 <Apple size={16} />
                 <span className="text-xs font-bold uppercase tracking-wider">macOS</span>
               </div>
-              <div className="flex items-center gap-2 text-text-muted px-4 py-2 rounded-full bg-white/5 border border-white/5">
+              <div className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-500",
+                currentOS === "linux" ? "bg-accent-primary/20 border-accent-primary/50 text-white shadow-lg shadow-accent-primary/10 scale-110" : "bg-white/5 border-white/5 text-text-muted"
+              )}>
                 <Terminal size={16} />
                 <span className="text-xs font-bold uppercase tracking-wider">Linux</span>
               </div>

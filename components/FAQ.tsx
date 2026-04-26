@@ -21,7 +21,7 @@ const FAQS = [
   },
   {
     q: "Which AI models does it use?",
-    a: "GPT-4.1 by default. You can switch to Claude 4.0 Sonnet or Gemini 1.5 Pro from the settings panel at any time.",
+    a: "GPT-4o by default. You can switch between Claude 3.5 Sonnet, Gemini 1.5 Pro, and Llama 3 (70B) from the settings panel at any time to get different perspectives.",
   },
   {
     q: "Does it work on Mac and Windows?",

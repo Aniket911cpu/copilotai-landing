@@ -23,6 +23,7 @@ import { auth, db } from "@/lib/firebase";
 import { signOut } from "firebase/auth";
 import { collection, query, where, getDocs, orderBy, limit } from "firebase/firestore";
 import Image from "next/image";
+import { useCallback } from "react";
 
 type Tab = "PROFILE" | "BILLING" | "SESSIONS" | "APP_SETTINGS";
 
@@ -52,13 +53,7 @@ export default function AccountSection({
     return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    if (activeTab === "SESSIONS" && user) {
-      fetchSessions();
-    }
-  }, [activeTab, user]);
-
-  const fetchSessions = async () => {
+  const fetchSessions = useCallback(async () => {
     if (!user) return;
     setIsLoadingSessions(true);
     try {
@@ -84,7 +79,13 @@ export default function AccountSection({
     } finally {
       setIsLoadingSessions(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (activeTab === "SESSIONS" && user) {
+      fetchSessions();
+    }
+  }, [activeTab, user, fetchSessions]);
 
   const handleSignOut = async () => {
     await signOut(auth);

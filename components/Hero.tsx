@@ -1,11 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, Play, CheckCircle2, Bot } from "lucide-react";
+import { ArrowRight, Play, CheckCircle2, Bot, X, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/AuthContext";
 import Image from "next/image";
+import { AnimatePresence } from "framer-motion";
+import * as Dialog from "@radix-ui/react-dialog";
 
 const Particles = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -80,7 +83,7 @@ export default function Hero() {
               variants={itemVariants}
               className="px-4 py-1.5 rounded-full bg-accent-primary/10 border border-accent-primary/20 text-accent-primary text-xs font-bold uppercase tracking-wider mb-6"
             >
-              🚀 Now in Public Beta
+              🚀 Version 2.4.1 — Stable Release
             </motion.div>
 
             <motion.h1
@@ -100,13 +103,13 @@ export default function Hero() {
             </motion.p>
 
             <motion.div variants={itemVariants} className="flex flex-wrap gap-4 mb-12">
-              <a 
-                href="#download"
+              <Link 
+                href="/download"
                 className="px-8 py-4 bg-accent-primary hover:bg-accent-primary/90 text-white rounded-2xl font-bold flex items-center gap-2 transition-all shadow-xl shadow-accent-primary/30 hover:scale-[1.02] active:scale-[0.98]"
               >
                 ⬇ Download Free
                 <ArrowRight size={20} />
-              </a>
+              </Link>
               <button 
                 onClick={() => setShowVideo(true)}
                 className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-bold flex items-center gap-2 transition-all border border-white/10 hover:scale-[1.02]"
@@ -132,7 +135,7 @@ export default function Hero() {
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 size={18} className="text-accent-cyan" />
-                GPT-4.1 powered
+                Multi-AI Powered (GPT-4o & Claude 3.5)
               </div>
             </motion.div>
           </motion.div>
@@ -225,9 +228,3 @@ export default function Hero() {
     </section>
   );
 }
-
-const X = ({ size }: { size: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M18 6 6 18M6 6l12 12" />
-  </svg>
-);

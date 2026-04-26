@@ -14,7 +14,7 @@ const NavLinks = [
   { name: "Features", href: "#features" },
   { name: "Pricing", href: "#pricing" },
   { name: "Support", href: "#support" },
-  { name: "Download", href: "#download" },
+  { name: "Download", href: "/download" },
 ];
 
 export default function Navbar() {
