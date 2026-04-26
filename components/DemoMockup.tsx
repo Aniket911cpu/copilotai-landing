@@ -128,7 +128,7 @@ export default function DemoMockup() {
               <span className="gradient-text">Adapts to You.</span>
             </h2>
             <p className="text-lg text-text-muted leading-relaxed">
-              Experience the future of interviewing. CopilotAI doesn't just give answers — it provides context, references your real experience, and helps you stay calm under pressure.
+              Experience the future of interviewing. CopilotAI doesn&apos;t just give answers — it provides context, references your real experience, and helps you stay calm under pressure.
             </p>
 
             <div className="space-y-4">
@@ -142,7 +142,7 @@ export default function DemoMockup() {
                     exit={{ opacity: 0, y: -10 }}
                     className="text-2xl font-bold text-white/80"
                   >
-                    "{QUESTIONS[questionIndex]}"
+                    &quot;{QUESTIONS[questionIndex]}&quot;
                   </motion.div>
                 </AnimatePresence>
               </div>

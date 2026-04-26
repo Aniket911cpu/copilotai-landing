@@ -76,7 +76,7 @@ export default function Problem() {
           className="mt-20 text-center"
         >
           <p className="text-2xl md:text-3xl font-bold gradient-text">
-            There's a smarter way.
+            There&apos;s a smarter way.
           </p>
         </motion.div>
       </div>

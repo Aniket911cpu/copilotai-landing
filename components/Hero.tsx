@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Play, CheckCircle2, Bot } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const Particles = () => {
   return (
@@ -154,7 +155,7 @@ export default function Hero() {
                     <Bot size={14} className="text-accent-cyan" />
                   </div>
                   <div className="space-y-2">
-                    <p className="text-[10px] text-white/40 leading-tight">"Tell me about a time you led a difficult project..."</p>
+                    <p className="text-[10px] text-white/40 leading-tight">&quot;Tell me about a time you led a difficult project...&quot;</p>
                     <div className="p-2.5 rounded-lg bg-black/40 border border-white/5">
                       <p className="text-[11px] font-mono text-accent-cyan leading-relaxed">
                         In my previous role at Acme Corp, I spearheaded a migration that...

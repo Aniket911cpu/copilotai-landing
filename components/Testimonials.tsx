@@ -57,7 +57,7 @@ export default function Testimonials() {
                   ))}
                 </div>
                 <p className="text-lg italic text-text-primary leading-relaxed mb-8">
-                  "{t.quote}"
+                  &quot;{t.quote}&quot;
                 </p>
               </div>
               <div className="flex items-center gap-4">
