@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CopilotAI — Real-Time AI Interview Assistant
 
-## Getting Started
+A premium, production-ready landing page for a real-time AI interview assistant desktop application.
 
-First, run the development server:
+## 🚀 Tech Stack
+- **Framework**: Next.js 14 (App Router)
+- **Styling**: Tailwind CSS 3
+- **Animations**: Framer Motion 11
+- **Icons**: Lucide React
+- **Payments**: Stripe
+- **Database**: Prisma + PostgreSQL (Supabase)
 
+## 🛠 Setup Instructions
+
+### 1. Clone and Install
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd copilotai-landing
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Environment Variables
+Create a `.env` file in the root directory and add the following:
+```env
+# Stripe
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Database
+DATABASE_URL="postgresql://postgres:[PASSWORD]@db.[PROJECT-ID].supabase.co:6543/postgres?pgbouncer=true"
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# App
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
 
-## Learn More
+### 3. Database Integration (Prisma)
+We use Prisma as the ORM. To sync the schema with your database:
+```bash
+# Push schema to database
+npx prisma db push
 
-To learn more about Next.js, take a look at the following resources:
+# Generate client
+npx prisma generate
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 4. Stripe Integration
+The payment gateway is integrated via Stripe Checkout.
+- API Route: `app/api/checkout/route.ts` handles session creation.
+- Frontend: `components/Pricing.tsx` triggers the checkout flow.
+- Success/Cancel: Redirects are handled within the single-page layout or custom routes.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 💻 Development
+```bash
+npm run dev
+```
 
-## Deploy on Vercel
+## 🏗 Build for Production
+```bash
+npm run build
+npm run start
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📄 License
+This project is licensed under the MIT License.

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Mic, Zap, MessageSquare, Sparkles } from "lucide-react";
+import { Mic, Zap, MessageSquare, Sparkles, Book, Code, Shield } from "lucide-react";
 
 const STEPS = [
   {
@@ -25,6 +25,24 @@ const STEPS = [
   },
 ];
 
+const GUIDES = [
+  {
+    title: "Quick Setup",
+    icon: Book,
+    text: "Install the desktop app, sync your resume, and you're ready for your first interview in under 5 minutes.",
+  },
+  {
+    title: "Technical Mastery",
+    icon: Code,
+    text: "Use the built-in OCR to capture coding problems. Get Big-O optimized solutions instantly.",
+  },
+  {
+    title: "Stealth Mode",
+    icon: Shield,
+    text: "Advanced content protection ensures your screen share only shows what you want it to.",
+  },
+];
+
 export default function HowItWorks() {
   return (
     <section className="py-24 relative overflow-hidden" id="how-it-works">
@@ -34,14 +52,14 @@ export default function HowItWorks() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-bold mb-6"
+            className="text-4xl md:text-6xl font-bold mb-6 gradient-text"
           >
             From Question to Answer in Under a Second
           </motion.h2>
         </div>
 
-        <div className="relative">
-          {/* Connecting Line (Desktop) */}
+        {/* Step Flow */}
+        <div className="relative mb-32">
           <div className="hidden md:block absolute top-1/2 left-0 w-full h-[2px] -translate-y-1/2 overflow-hidden px-24">
             <motion.div
               initial={{ x: "-100%" }}
@@ -63,20 +81,15 @@ export default function HowItWorks() {
                 className="flex flex-col items-center text-center group"
               >
                 <div className="relative mb-8">
-                  <div className="w-20 h-20 rounded-full bg-bg-surface border border-white/10 flex items-center justify-center text-white relative z-10 group-hover:border-accent-primary/50 transition-colors duration-500">
+                  <div className="w-20 h-20 rounded-full bg-bg-surface border border-white/10 flex items-center justify-center text-white relative z-10 group-hover:border-accent-primary/50 transition-all duration-500">
                     <step.icon size={32} />
                     {index === 2 && (
                       <Sparkles className="absolute -top-1 -right-1 text-accent-cyan" size={20} />
                     )}
                   </div>
-                  {/* Step Number Badge */}
                   <div className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-accent-primary text-white text-sm font-bold flex items-center justify-center border-4 border-bg-base">
                     {index + 1}
                   </div>
-                  {/* Animated Ring for Step 1 */}
-                  {index === 0 && (
-                    <div className="absolute inset-0 rounded-full border border-accent-primary/50 animate-ping opacity-20" />
-                  )}
                 </div>
                 <h3 className="text-2xl font-bold mb-4">{step.title}</h3>
                 <p className="text-text-muted leading-relaxed max-w-xs">{step.body}</p>
@@ -85,18 +98,38 @@ export default function HowItWorks() {
           </div>
         </div>
 
+        {/* Detailed Guides (replacing separate Docs page) */}
+        <div className="grid lg:grid-cols-3 gap-8">
+          {GUIDES.map((guide, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              className="glass-card p-10 group hover:bg-white/[0.02] transition-all"
+            >
+              <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center mb-6 text-white/50 group-hover:text-accent-primary transition-colors">
+                <guide.icon size={20} />
+              </div>
+              <h4 className="text-xl font-bold mb-4">{guide.title}</h4>
+              <p className="text-text-muted text-sm leading-relaxed">{guide.text}</p>
+            </motion.div>
+          ))}
+        </div>
+
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.8 }}
-          className="mt-24 p-8 glass-card max-w-md mx-auto text-center"
+          className="mt-24 p-10 glass-card max-w-md mx-auto text-center border-accent-cyan/20"
         >
-          <div className="text-4xl font-bold gradient-text mb-2">
+          <div className="text-5xl font-bold gradient-text mb-2">
             &lt; 800ms
           </div>
-          <div className="text-sm font-medium text-text-muted uppercase tracking-widest">
-            Average end-to-end response time
+          <div className="text-xs font-bold text-text-muted uppercase tracking-[0.3em]">
+            Avg End-to-End Latency
           </div>
         </motion.div>
       </div>

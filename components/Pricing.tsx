@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Check, ShieldCheck, Loader2 } from "lucide-react";
+import { Check, ShieldCheck, Loader2, Zap, HeartHandshake, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const TIER_FEATURES = {
@@ -11,6 +11,7 @@ const TIER_FEATURES = {
     "Basic AI answers",
     "Resume upload",
     "7-day session history",
+    "Community support",
   ],
   PRO: [
     "Unlimited sessions",
@@ -19,6 +20,7 @@ const TIER_FEATURES = {
     "Post-session PDF report",
     "Company-specific mode",
     "Priority support",
+    "STAR & CAR frameworks",
   ],
   ELITE: [
     "Everything in Pro",
@@ -28,11 +30,12 @@ const TIER_FEATURES = {
     "Auto-apply agent",
     "LinkedIn optimizer",
     "Dedicated support",
+    "Custom fine-tuned models",
   ],
 };
 
 const PRICE_IDS = {
-  PRO: "price_123_pro", // Replace with real Stripe Price IDs
+  PRO: "price_123_pro", 
   ELITE: "price_123_elite",
 };
 
@@ -76,7 +79,7 @@ export default function Pricing() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-bold mb-6"
+            className="text-4xl md:text-6xl font-bold mb-6 gradient-text"
           >
             Simple, Transparent Pricing
           </motion.h2>
@@ -133,10 +136,34 @@ export default function Pricing() {
           />
         </div>
 
-        <div className="mt-16 flex flex-col items-center gap-4 text-text-muted">
-          <div className="flex items-center gap-2">
-            <ShieldCheck size={20} className="text-accent-green" />
-            <span className="text-sm font-medium">30-day money-back guarantee. No questions asked.</span>
+        {/* Trust Row */}
+        <div className="mt-24 grid md:grid-cols-3 gap-12 border-t border-white/5 pt-16">
+          <div className="text-center group">
+            <div className="w-12 h-12 rounded-full bg-accent-primary/10 flex items-center justify-center text-accent-primary mx-auto mb-6 transition-transform group-hover:scale-110">
+              <ShieldCheck size={24} />
+            </div>
+            <h3 className="text-lg font-bold mb-3">Secure Payments</h3>
+            <p className="text-sm text-text-muted">
+              Processed via Stripe. 256-bit SSL encryption.
+            </p>
+          </div>
+          <div className="text-center group">
+            <div className="w-12 h-12 rounded-full bg-accent-violet/10 flex items-center justify-center text-accent-violet mx-auto mb-6 transition-transform group-hover:scale-110">
+              <Zap size={24} />
+            </div>
+            <h3 className="text-lg font-bold mb-3">Instant Access</h3>
+            <p className="text-sm text-text-muted">
+              Features activated immediately after purchase.
+            </p>
+          </div>
+          <div className="text-center group">
+            <div className="w-12 h-12 rounded-full bg-accent-cyan/10 flex items-center justify-center text-accent-cyan mx-auto mb-6 transition-transform group-hover:scale-110">
+              <HeartHandshake size={24} />
+            </div>
+            <h3 className="text-lg font-bold mb-3">30-Day Guarantee</h3>
+            <p className="text-sm text-text-muted">
+              Full refund if you don&apos;t nail your interview.
+            </p>
           </div>
         </div>
       </div>
@@ -200,13 +227,13 @@ function PricingCard({
 
       <button
         onClick={onClick}
-        disabled={isLoading || price === 0}
+        disabled={isLoading || (title === "FREE")}
         className={cn(
           "w-full py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2",
           popular
             ? "bg-accent-primary text-white hover:bg-accent-primary/90 shadow-lg shadow-accent-primary/20"
             : "bg-white/5 text-white hover:bg-white/10 border border-white/10",
-          (isLoading || price === 0) && "opacity-50 cursor-not-allowed"
+          (isLoading || title === "FREE") && "opacity-50 cursor-not-allowed"
         )}
       >
         {isLoading && <Loader2 size={18} className="animate-spin" />}
