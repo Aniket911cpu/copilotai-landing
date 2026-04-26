@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils";
 import { auth, db } from "@/lib/firebase";
 import { signOut } from "firebase/auth";
 import { collection, query, where, getDocs } from "firebase/firestore";
+import Image from "next/image";
 
 type Tab = "PROFILE" | "BILLING" | "SESSIONS" | "APP_SETTINGS";
 
@@ -55,7 +56,7 @@ export default function AccountSection({
           <aside className="w-64 border-r border-white/5 bg-white/[0.02] p-6 flex flex-col">
             <div className="flex items-center gap-3 mb-10 px-2">
               {user?.photoURL ? (
-                <img src={user.photoURL} alt="Profile" className="w-10 h-10 rounded-full" />
+                <Image src={user.photoURL} alt="Profile" width={40} height={40} className="rounded-full" />
               ) : (
                 <div className="w-10 h-10 rounded-full bg-accent-primary flex items-center justify-center text-white font-bold">
                   {user?.email?.charAt(0).toUpperCase()}

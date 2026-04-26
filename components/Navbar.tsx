@@ -9,6 +9,7 @@ import AuthSection from "./AuthSection";
 import AccountSection from "./AccountSection";
 import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import Image from "next/image";
 
 const NavLinks = [
   { name: "Features", href: "#features" },
@@ -80,7 +81,7 @@ export default function Navbar() {
               className="flex items-center gap-3 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 transition-all group"
             >
               {user.photoURL ? (
-                <img src={user.photoURL} alt="Profile" className="w-6 h-6 rounded-full" />
+                <Image src={user.photoURL} alt="Profile" width={24} height={24} className="rounded-full" />
               ) : (
                 <div className="w-6 h-6 rounded-full bg-accent-primary flex items-center justify-center text-[10px] font-bold text-white">
                   {user.email?.charAt(0).toUpperCase()}
