@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/lib/AuthContext";
 
 const inter = Inter({ 
   subsets: ["latin"],
   variable: "--font-inter",
-  weight: ["400", "700"],
+  weight: ["300", "400", "500", "600", "700", "800"],
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
     description: "Ace every interview with AI that thinks faster than you. Detects questions in real time and whispers perfect answers.",
     type: "website",
     url: "https://copilotai.io",
-    // images: [{ url: "/og-image.png" }],
+    images: [{ url: "/og-image.png" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -38,7 +39,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

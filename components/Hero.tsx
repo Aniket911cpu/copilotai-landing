@@ -1,11 +1,21 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Play, CheckCircle2, Bot } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/AuthContext";
+import Image from "next/image";
 
 const Particles = () => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null;
+
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {[...Array(30)].map((_, i) => (
@@ -13,15 +23,15 @@ const Particles = () => {
           key={i}
           initial={{
             opacity: 0.1,
-            x: Math.random() * 100 + "%",
-            y: Math.random() * 100 + "%",
+            x: `${(i * 3.33) % 100}%`,
+            y: `${(i * 7.77) % 100}%`,
           }}
           animate={{
-            y: [null, Math.random() * 100 + "%"],
+            y: [null, `${((i * 7.77) + 50) % 100}%`],
             opacity: [0.1, 0.2, 0.1],
           }}
           transition={{
-            duration: Math.random() * 10 + 10,
+            duration: 10 + (i % 10),
             repeat: Infinity,
             ease: "linear",
           }}
@@ -33,6 +43,9 @@ const Particles = () => {
 };
 
 export default function Hero() {
+  const { user, setAuthMode } = useAuth();
+  const [showVideo, setShowVideo] = useState(false);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -87,11 +100,17 @@ export default function Hero() {
             </motion.p>
 
             <motion.div variants={itemVariants} className="flex flex-wrap gap-4 mb-12">
-              <button className="px-8 py-4 bg-accent-primary hover:bg-accent-primary/90 text-white rounded-2xl font-bold flex items-center gap-2 transition-all shadow-xl shadow-accent-primary/30 hover:scale-[1.02] active:scale-[0.98]">
+              <a 
+                href="#download"
+                className="px-8 py-4 bg-accent-primary hover:bg-accent-primary/90 text-white rounded-2xl font-bold flex items-center gap-2 transition-all shadow-xl shadow-accent-primary/30 hover:scale-[1.02] active:scale-[0.98]"
+              >
                 ⬇ Download Free
                 <ArrowRight size={20} />
-              </button>
-              <button className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-bold flex items-center gap-2 transition-all border border-white/10 hover:scale-[1.02]">
+              </a>
+              <button 
+                onClick={() => setShowVideo(true)}
+                className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-bold flex items-center gap-2 transition-all border border-white/10 hover:scale-[1.02]"
+              >
                 <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center">
                   <Play size={12} fill="currentColor" />
                 </div>
@@ -129,7 +148,12 @@ export default function Hero() {
               <div className="rounded-[24px] bg-bg-surface overflow-hidden border border-white/5 aspect-[16/10] relative">
                 {/* Simulated Meeting UI */}
                 <div className="absolute inset-0 bg-[#0A0A12]">
-                  <div className="absolute inset-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=1200')] bg-cover bg-center grayscale blur-sm" />
+                  <Image 
+                    src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=1200" 
+                    alt="Interview Simulation"
+                    fill
+                    className="object-cover grayscale blur-sm opacity-40"
+                  />
                   
                   <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3">
                     {[...Array(6)].map((_, i) => (
@@ -176,6 +200,34 @@ export default function Hero() {
           </motion.div>
         </div>
       </div>
+
+      {/* Video Modal Placeholder */}
+      <AnimatePresence>
+        {showVideo && (
+          <Dialog.Root open={showVideo} onOpenChange={setShowVideo}>
+            <Dialog.Portal>
+              <Dialog.Overlay className="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100]" />
+              <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-4xl aspect-video glass-card overflow-hidden z-[101] p-0 border-white/10">
+                <div className="w-full h-full bg-black flex items-center justify-center text-white/20 font-bold">
+                  Demo Video Placeholder
+                  <button 
+                    onClick={() => setShowVideo(false)}
+                    className="absolute top-4 right-4 text-white/50 hover:text-white"
+                  >
+                    <X size={24} />
+                  </button>
+                </div>
+              </Dialog.Content>
+            </Dialog.Portal>
+          </Dialog.Root>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
+
+const X = ({ size }: { size: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18 6 6 18M6 6l12 12" />
+  </svg>
+);

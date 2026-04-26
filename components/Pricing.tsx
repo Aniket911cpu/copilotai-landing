@@ -2,62 +2,75 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Check, ShieldCheck, Loader2, Zap, HeartHandshake, Shield } from "lucide-react";
+import { Check, ArrowRight, Loader2, Zap, ShieldCheck, Headphones } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/AuthContext";
 
-const TIER_FEATURES = {
-  FREE: [
-    "3 sessions / month",
-    "Basic AI answers",
-    "Resume upload",
-    "7-day session history",
-    "Community support",
-  ],
-  PRO: [
-    "Unlimited sessions",
-    "All answer frameworks",
-    "Coding helper",
-    "Post-session PDF report",
-    "Company-specific mode",
-    "Priority support",
-    "STAR & CAR frameworks",
-  ],
-  ELITE: [
-    "Everything in Pro",
-    "Local processing mode",
-    "Duo assist mode",
-    "Career ecosystem",
-    "Auto-apply agent",
-    "LinkedIn optimizer",
-    "Dedicated support",
-    "Custom fine-tuned models",
-  ],
-};
-
-const PRICE_IDS = {
-  PRO: "price_123_pro", 
-  ELITE: "price_123_elite",
-};
+const PLANS = [
+  {
+    title: "FREE",
+    price: "0",
+    description: "Perfect for students & practice.",
+    features: [
+      "Real-time question detection",
+      "Streaming answers (GPT-3.5)",
+      "Standard latency (2.5s)",
+      "Community support",
+    ],
+    priceId: "",
+  },
+  {
+    title: "PRO",
+    price: "29",
+    description: "Most popular for job seekers.",
+    features: [
+      "Everything in Free",
+      "Sub-800ms Latency",
+      "GPT-4.1 Powered",
+      "Resume-Aware Answers",
+      "Invisible to Screen Share",
+    ],
+    priceId: "price_1P... (example)",
+    popular: true,
+  },
+  {
+    title: "ELITE",
+    price: "99",
+    description: "For high-stakes senior roles.",
+    features: [
+      "Everything in Pro",
+      "Local Processing Mode",
+      "Zero Cloud Data Storage",
+      "24/7 Priority Support",
+      "Personal Onboarding",
+    ],
+    priceId: "price_1Q... (example)",
+  },
+];
 
 export default function Pricing() {
-  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("yearly");
-  const [loading, setLoading] = useState<string | null>(null);
+  const { user, setAuthMode } = useAuth();
+  const [loadingPriceId, setLoadingPriceId] = useState<string | null>(null);
 
-  const getPrice = (monthly: number) => {
-    if (billingCycle === "monthly") return monthly;
-    return Math.floor(monthly * 0.8); // 20% discount
-  };
+  const handleCheckout = async (priceId: string, planName: string) => {
+    if (!user) {
+      setAuthMode("SIGN_IN");
+      return;
+    }
 
-  const onCheckout = async (plan: "PRO" | "ELITE") => {
+    if (!priceId) {
+      // For FREE plan, we could redirect to a dashboard or show success
+      setAuthMode(null);
+      return;
+    }
+
+    setLoadingPriceId(priceId);
+
     try {
-      setLoading(plan);
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          priceId: PRICE_IDS[plan],
-          planName: plan,
-        }),
+        body: JSON.stringify({ priceId, planName, userId: user.uid }),
       });
 
       const data = await response.json();
@@ -65,180 +78,115 @@ export default function Pricing() {
         window.location.href = data.url;
       }
     } catch (error) {
-      console.error("Checkout error:", error);
+      console.error("Checkout failed:", error);
     } finally {
-      setLoading(null);
+      setLoadingPriceId(null);
     }
   };
 
   return (
-    <section className="py-24 relative" id="pricing">
+    <section className="py-24 relative overflow-hidden" id="pricing">
       <div className="container mx-auto px-6">
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-20">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-6xl font-bold mb-6 gradient-text"
+            className="text-4xl md:text-6xl font-bold mb-6"
           >
-            Simple, Transparent Pricing
+            Invest in Your <span className="gradient-text">Future.</span>
           </motion.h2>
+          <p className="text-lg text-text-muted">
+            Choose the plan that fits your career goals. All plans include absolute stealth and anti-detection technology.
+          </p>
+        </div>
 
-          {/* Toggle */}
-          <div className="flex items-center justify-center gap-4 mt-8">
-            <span className={cn("text-sm font-medium transition-colors", billingCycle === "monthly" ? "text-white" : "text-text-muted")}>Monthly</span>
-            <button
-              onClick={() => setBillingCycle(billingCycle === "monthly" ? "yearly" : "monthly")}
-              className="relative w-14 h-7 rounded-full bg-white/10 border border-white/10 p-1 transition-all"
+        <div className="grid lg:grid-cols-3 gap-8 mb-20">
+          {PLANS.map((plan, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              className={cn(
+                "glass-card p-10 flex flex-col relative",
+                plan.popular && "border-accent-primary/40 bg-accent-primary/5 shadow-2xl shadow-accent-primary/10"
+              )}
             >
-              <motion.div
-                animate={{ x: billingCycle === "monthly" ? 0 : 28 }}
-                className="w-5 h-5 rounded-full bg-accent-primary shadow-lg shadow-accent-primary/50"
-              />
-            </button>
-            <div className="flex items-center gap-2">
-              <span className={cn("text-sm font-medium transition-colors", billingCycle === "yearly" ? "text-white" : "text-text-muted")}>Yearly</span>
-              <span className="px-2 py-0.5 rounded-full bg-accent-green/20 text-accent-green text-[10px] font-bold uppercase">Save 20%</span>
-            </div>
-          </div>
+              {plan.popular && (
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-accent-primary text-white text-[10px] font-bold px-4 py-1 rounded-full uppercase tracking-widest">
+                  Most Popular
+                </div>
+              )}
+
+              <div className="mb-8">
+                <h3 className="text-xl font-bold text-white mb-2">{plan.title}</h3>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-bold text-white">${plan.price}</span>
+                  <span className="text-text-muted">/month</span>
+                </div>
+                <p className="text-sm text-text-muted mt-4">{plan.description}</p>
+              </div>
+
+              <div className="space-y-4 mb-10 flex-1">
+                {plan.features.map((feature, idx) => (
+                  <div key={idx} className="flex items-center gap-3 text-sm text-text-muted">
+                    <Check size={16} className="text-accent-green shrink-0" />
+                    {feature}
+                  </div>
+                ))}
+              </div>
+
+              <button
+                onClick={() => {
+                  if (plan.title === "FREE") {
+                    if (user) {
+                      // Already logged in, maybe redirect to dashboard
+                    } else {
+                      setAuthMode("REGISTER");
+                    }
+                  } else {
+                    handleCheckout(plan.priceId, plan.title);
+                  }
+                }}
+                disabled={loadingPriceId === plan.priceId}
+                className={cn(
+                  "w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all",
+                  plan.popular 
+                    ? "bg-accent-primary text-white hover:bg-accent-primary/90 shadow-lg shadow-accent-primary/30" 
+                    : "bg-white/5 text-white hover:bg-white/10 border border-white/10"
+                )}
+              >
+                {loadingPriceId === plan.priceId ? (
+                  <Loader2 size={20} className="animate-spin" />
+                ) : (
+                  <>
+                    {plan.title === "FREE" ? (user ? "Current Plan" : "Get Started Free") : "Upgrade Now"}
+                    <ArrowRight size={18} />
+                  </>
+                )}
+              </button>
+            </motion.div>
+          ))}
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* FREE */}
-          <PricingCard
-            title="FREE"
-            price={0}
-            features={TIER_FEATURES.FREE}
-            cta="Get Started Free"
-          />
-
-          {/* PRO */}
-          <PricingCard
-            title="PRO"
-            price={getPrice(18)}
-            features={TIER_FEATURES.PRO}
-            cta="Start Pro Free Trial"
-            popular
-            accentColor="accent-primary"
-            isLoading={loading === "PRO"}
-            onClick={() => onCheckout("PRO")}
-          />
-
-          {/* ELITE */}
-          <PricingCard
-            title="ELITE"
-            price={getPrice(35)}
-            features={TIER_FEATURES.ELITE}
-            cta="Go Elite"
-            accentColor="accent-violet"
-            isLoading={loading === "ELITE"}
-            onClick={() => onCheckout("ELITE")}
-          />
-        </div>
-
-        {/* Trust Row */}
-        <div className="mt-24 grid md:grid-cols-3 gap-12 border-t border-white/5 pt-16">
-          <div className="text-center group">
-            <div className="w-12 h-12 rounded-full bg-accent-primary/10 flex items-center justify-center text-accent-primary mx-auto mb-6 transition-transform group-hover:scale-110">
-              <ShieldCheck size={24} />
-            </div>
-            <h3 className="text-lg font-bold mb-3">Secure Payments</h3>
-            <p className="text-sm text-text-muted">
-              Processed via Stripe. 256-bit SSL encryption.
-            </p>
+        {/* Trust Badges */}
+        <div className="flex flex-wrap justify-center gap-12 pt-12 border-t border-white/5">
+          <div className="flex items-center gap-3 text-sm text-text-muted font-medium">
+            <Zap size={20} className="text-amber-500" />
+            Instant Activation
           </div>
-          <div className="text-center group">
-            <div className="w-12 h-12 rounded-full bg-accent-violet/10 flex items-center justify-center text-accent-violet mx-auto mb-6 transition-transform group-hover:scale-110">
-              <Zap size={24} />
-            </div>
-            <h3 className="text-lg font-bold mb-3">Instant Access</h3>
-            <p className="text-sm text-text-muted">
-              Features activated immediately after purchase.
-            </p>
+          <div className="flex items-center gap-3 text-sm text-text-muted font-medium">
+            <ShieldCheck size={20} className="text-accent-green" />
+            30-Day Money Back
           </div>
-          <div className="text-center group">
-            <div className="w-12 h-12 rounded-full bg-accent-cyan/10 flex items-center justify-center text-accent-cyan mx-auto mb-6 transition-transform group-hover:scale-110">
-              <HeartHandshake size={24} />
-            </div>
-            <h3 className="text-lg font-bold mb-3">30-Day Guarantee</h3>
-            <p className="text-sm text-text-muted">
-              Full refund if you don&apos;t nail your interview.
-            </p>
+          <div className="flex items-center gap-3 text-sm text-text-muted font-medium">
+            <Headphones size={20} className="text-accent-primary" />
+            24/7 Support
           </div>
         </div>
       </div>
     </section>
-  );
-}
-
-function PricingCard({
-  title,
-  price,
-  features,
-  cta,
-  popular = false,
-  accentColor = "white/10",
-  isLoading = false,
-  onClick,
-}: {
-  title: string;
-  price: number;
-  features: string[];
-  cta: string;
-  popular?: boolean;
-  accentColor?: string;
-  isLoading?: boolean;
-  onClick?: () => void;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className={cn(
-        "glass-card p-8 flex flex-col relative transition-all duration-300",
-        popular && "border-accent-primary shadow-2xl shadow-accent-primary/10 scale-105 z-10"
-      )}
-    >
-      {popular && (
-        <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-accent-primary rounded-full text-[10px] font-bold text-white uppercase tracking-widest">
-          Most Popular
-        </div>
-      )}
-
-      <div className="mb-8">
-        <h3 className="text-sm font-bold text-text-muted tracking-widest uppercase mb-4">{title}</h3>
-        <div className="flex items-baseline gap-1">
-          <span className="text-5xl font-bold">${price}</span>
-          <span className="text-text-muted">/month</span>
-        </div>
-      </div>
-
-      <div className="space-y-4 mb-8 flex-1">
-        {features.map((feature, i) => (
-          <div key={i} className="flex items-start gap-3">
-            <div className="mt-1 w-5 h-5 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0">
-              <Check size={12} className="text-accent-green" />
-            </div>
-            <span className="text-sm text-text-muted leading-tight">{feature}</span>
-          </div>
-        ))}
-      </div>
-
-      <button
-        onClick={onClick}
-        disabled={isLoading || (title === "FREE")}
-        className={cn(
-          "w-full py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2",
-          popular
-            ? "bg-accent-primary text-white hover:bg-accent-primary/90 shadow-lg shadow-accent-primary/20"
-            : "bg-white/5 text-white hover:bg-white/10 border border-white/10",
-          (isLoading || title === "FREE") && "opacity-50 cursor-not-allowed"
-        )}
-      >
-        {isLoading && <Loader2 size={18} className="animate-spin" />}
-        {cta}
-      </button>
-    </motion.div>
   );
 }

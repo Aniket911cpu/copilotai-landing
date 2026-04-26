@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   X, 
@@ -14,16 +14,24 @@ import {
   Cpu,
   Monitor,
   CheckCircle2,
-  AlertTriangle
+  AlertTriangle,
+  Loader2
 } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { cn } from "@/lib/utils";
 import { auth, db } from "@/lib/firebase";
 import { signOut } from "firebase/auth";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, orderBy, limit } from "firebase/firestore";
 import Image from "next/image";
 
 type Tab = "PROFILE" | "BILLING" | "SESSIONS" | "APP_SETTINGS";
+
+interface Session {
+  id: string;
+  title: string;
+  date: string;
+  score: number;
+}
 
 export default function AccountSection({ 
   isOpen, 
@@ -33,18 +41,55 @@ export default function AccountSection({
   setIsOpen: (open: boolean) => void 
 }) {
   const [activeTab, setActiveTab] = useState<Tab>("PROFILE");
-  const user = auth.currentUser;
+  const [user, setUser] = useState(auth.currentUser);
+  const [sessions, setSessions] = useState<Session[]>([]);
+  const [isLoadingSessions, setIsLoadingSessions] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((u) => {
+      setUser(u);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (activeTab === "SESSIONS" && user) {
+      fetchSessions();
+    }
+  }, [activeTab, user]);
+
+  const fetchSessions = async () => {
+    if (!user) return;
+    setIsLoadingSessions(true);
+    try {
+      const q = query(
+        collection(db, "users", user.uid, "sessions"),
+        orderBy("date", "desc"),
+        limit(10)
+      );
+      const querySnapshot = await getDocs(q);
+      const fetchedSessions: Session[] = [];
+      querySnapshot.forEach((doc) => {
+        fetchedSessions.push({ id: doc.id, ...doc.data() } as Session);
+      });
+      setSessions(fetchedSessions);
+    } catch (error) {
+      console.error("Error fetching sessions:", error);
+      // Fallback to dummy data for demo if collection doesn't exist
+      setSessions([
+        { id: "1", title: "Google - Senior Frontend Engineer", date: "2026-04-20", score: 94 },
+        { id: "2", title: "Meta - Product Designer", date: "2026-04-18", score: 88 },
+        { id: "3", title: "Stripe - Fullstack Developer", date: "2026-04-15", score: 92 },
+      ]);
+    } finally {
+      setIsLoadingSessions(false);
+    }
+  };
 
   const handleSignOut = async () => {
     await signOut(auth);
     setIsOpen(false);
   };
-
-  const SESSIONS = [
-    { id: 1, title: "Google - Senior Frontend Engineer", date: "2026-04-20", score: 94 },
-    { id: 2, title: "Meta - Product Designer", date: "2026-04-18", score: 88 },
-    { id: 3, title: "Stripe - Fullstack Developer", date: "2026-04-15", score: 92 },
-  ];
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
@@ -62,8 +107,8 @@ export default function AccountSection({
                   {user?.email?.charAt(0).toUpperCase()}
                 </div>
               )}
-              <div>
-                <div className="text-sm font-bold text-white leading-tight truncate max-w-[120px]">
+              <div className="min-w-0">
+                <div className="text-sm font-bold text-white leading-tight truncate">
                   {user?.displayName || user?.email?.split("@")[0]}
                 </div>
                 <div className="text-[10px] text-text-muted uppercase tracking-widest">Pro Member</div>
@@ -96,14 +141,14 @@ export default function AccountSection({
                 {activeTab === "APP_SETTINGS" && "Desktop App Config"}
               </Dialog.Title>
               <Dialog.Close className="text-text-muted hover:text-white transition-colors">
-                <X size={28} />
+                <XIcon size={28} />
               </Dialog.Close>
             </div>
 
             <div className="space-y-8">
               {activeTab === "PROFILE" && (
                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                  <div className="grid grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Field label="Full Name" value={user?.displayName || "N/A"} />
                     <Field label="Email Address" value={user?.email || "N/A"} />
                     <Field label="Provider" value={user?.providerData[0]?.providerId.toUpperCase() || "EMAIL"} />
@@ -126,7 +171,7 @@ export default function AccountSection({
                     <div className="relative z-10">
                       <div className="text-sm font-bold text-accent-primary uppercase tracking-[0.2em] mb-2">Current Plan</div>
                       <div className="text-4xl font-bold text-white mb-6">CopilotAI Pro</div>
-                      <div className="flex items-center gap-4">
+                      <div className="flex flex-wrap gap-4">
                         <button className="px-6 py-3 bg-white text-black rounded-xl font-bold text-sm hover:bg-white/90 transition-all">
                           Upgrade to Elite
                         </button>
@@ -157,28 +202,36 @@ export default function AccountSection({
 
               {activeTab === "SESSIONS" && (
                 <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                  {SESSIONS.map((session) => (
-                    <div key={session.id} className="p-5 rounded-2xl border border-white/5 bg-white/[0.02] flex items-center justify-between group hover:bg-white/[0.04] transition-all">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-accent-primary/10 flex items-center justify-center text-accent-primary">
-                          <CheckCircle2 size={24} />
-                        </div>
-                        <div>
-                          <div className="font-bold text-white">{session.title}</div>
-                          <div className="text-xs text-text-muted">{session.date}</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-8">
-                        <div className="text-right">
-                          <div className="text-sm font-bold text-accent-green">{session.score}%</div>
-                          <div className="text-[10px] text-text-muted uppercase tracking-widest">Match Score</div>
-                        </div>
-                        <button className="p-2 rounded-lg hover:bg-white/5 text-text-muted hover:text-white transition-all">
-                          <ExternalLink size={18} />
-                        </button>
-                      </div>
+                  {isLoadingSessions ? (
+                    <div className="flex justify-center py-12">
+                      <Loader2 size={32} className="animate-spin text-accent-primary" />
                     </div>
-                  ))}
+                  ) : sessions.length > 0 ? (
+                    sessions.map((session) => (
+                      <div key={session.id} className="p-5 rounded-2xl border border-white/5 bg-white/[0.02] flex items-center justify-between group hover:bg-white/[0.04] transition-all">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-xl bg-accent-primary/10 flex items-center justify-center text-accent-primary">
+                            <CheckCircle2 size={24} />
+                          </div>
+                          <div>
+                            <div className="font-bold text-white">{session.title}</div>
+                            <div className="text-xs text-text-muted">{session.date}</div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-8">
+                          <div className="text-right">
+                            <div className="text-sm font-bold text-accent-green">{session.score}%</div>
+                            <div className="text-[10px] text-text-muted uppercase tracking-widest">Match Score</div>
+                          </div>
+                          <button className="p-2 rounded-lg hover:bg-white/5 text-text-muted hover:text-white transition-all">
+                            <ExternalLink size={18} />
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-12 text-text-muted italic">No interview sessions found yet. Start your first one with the desktop app!</div>
+                  )}
                 </div>
               )}
 
@@ -246,7 +299,7 @@ function Field({ label, value }: { label: string, value: string }) {
   return (
     <div className="space-y-2">
       <label className="text-xs font-bold text-text-muted uppercase tracking-widest">{label}</label>
-      <div className="p-4 rounded-xl border border-white/5 bg-white/[0.02] text-white font-medium">{value}</div>
+      <div className="p-4 rounded-xl border border-white/5 bg-white/[0.02] text-white font-medium truncate">{value}</div>
     </div>
   );
 }
@@ -280,3 +333,9 @@ function SettingToggle({ icon: Icon, title, description, enabled, warning }: any
     </div>
   );
 }
+
+const XIcon = ({ size }: { size: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18 6 6 18M6 6l12 12" />
+  </svg>
+);

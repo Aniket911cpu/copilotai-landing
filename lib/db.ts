@@ -1,9 +1,15 @@
 import { PrismaClient } from "@prisma/client";
 
-declare global {
-  var prisma: PrismaClient | undefined;
-}
+/**
+ * OPTIONAL: Prisma Client for PostgreSQL.
+ * Note: Firebase Firestore is the primary database for user profiles and sessions.
+ * Use this only if a separate PostgreSQL DB is needed for advanced analytics.
+ */
 
-export const db = globalThis.prisma || new PrismaClient();
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
 
-if (process.env.NODE_ENV !== "production") globalThis.prisma = db;
+export const db = globalForPrisma.prisma ?? new PrismaClient();
+
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = db;

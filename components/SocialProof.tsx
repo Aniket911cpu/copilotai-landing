@@ -2,10 +2,24 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { 
+  Cloud, 
+  Cpu, 
+  Globe, 
+  Shield, 
+  Terminal, 
+  Zap,
+  Box,
+  Layers
+} from "lucide-react";
 
 const COMPANIES = [
-  "Google", "Amazon", "Microsoft", "Goldman Sachs", "McKinsey", "Flipkart",
-  "Google", "Amazon", "Microsoft", "Goldman Sachs", "McKinsey", "Flipkart"
+  { name: "Google", icon: Globe },
+  { name: "Amazon", icon: Box },
+  { name: "Microsoft", icon: Layers },
+  { name: "Goldman Sachs", icon: Shield },
+  { name: "McKinsey", icon: Cpu },
+  { name: "Flipkart", icon: Terminal },
 ];
 
 export default function SocialProof() {
@@ -23,18 +37,21 @@ export default function SocialProof() {
             x: ["0%", "-50%"],
           }}
           transition={{
-            duration: 20,
+            duration: 30,
             repeat: Infinity,
             ease: "linear",
           }}
           className="flex whitespace-nowrap"
         >
-          {COMPANIES.map((company, index) => (
+          {[...COMPANIES, ...COMPANIES].map((company, index) => (
             <div
               key={index}
-              className="mx-12 text-2xl font-bold text-white/20 hover:text-white/60 transition-colors cursor-default"
+              className="mx-12 flex items-center gap-3 grayscale opacity-30 hover:grayscale-0 hover:opacity-100 transition-all cursor-default"
             >
-              {company}
+              <company.icon size={24} className="text-white" />
+              <span className="text-xl font-bold text-white tracking-tight">
+                {company.name}
+              </span>
             </div>
           ))}
         </motion.div>
