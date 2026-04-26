@@ -10,20 +10,20 @@ const config: Config = {
     extend: {
       colors: {
         bg: {
-          base: "#0D0D14",
-          surface: "#13131E",
-          elevated: "#1A1A2E",
+          base: "#050508", // Obsidian base
+          surface: "#0A0A0F", // Deep surface
+          elevated: "#12121A", // Subtle elevation
         },
         accent: {
-          primary: "#6366F1",
-          violet: "#8B5CF6",
-          cyan: "#22D3EE",
-          green: "#10B981",
-          rose: "#F43F5E",
+          primary: "#4F46E5", // Indigo 600
+          violet: "#7C3AED", // Violet 600
+          cyan: "#06B6D4", // Cyan 500
+          green: "#10B981", // Emerald 500
+          rose: "#E11D48", // Rose 600
         },
         text: {
-          primary: "#E8E8F0",
-          muted: "rgba(232, 232, 240, 0.55)",
+          primary: "#F8FAFC", // Slate 50
+          muted: "#94A3B8", // Slate 400
         },
       },
       fontFamily: {

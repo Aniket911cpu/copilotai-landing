@@ -1,116 +1,130 @@
-# 🚀 CopilotAI Setup Guide
+# 🚀 CopilotAI Comprehensive Setup Guide
 
-This guide will walk you through setting up the CopilotAI landing page and its integrated services (Firebase & Stripe).
+This document is intended for core engineering team members deploying or running the CopilotAI web application locally. It covers the full integration stack: Next.js, Firebase Auth/Firestore, Stripe Payments, and Prisma.
 
 ## 📋 Prerequisites
-- **Node.js**: v18.17 or later
-- **npm**: v9 or later
-- **Firebase Account**: [Sign up here](https://console.firebase.google.com/)
-- **Stripe Account**: [Sign up here](https://dashboard.stripe.com/)
-- **PostgreSQL Database**: (Optional, if using Prisma) [Supabase](https://supabase.com/) is recommended.
+Before you begin, ensure you have the following installed and configured:
+- **Node.js**: v18.17.0 or strictly higher.
+- **npm**: v9 or higher.
+- **Git**: For version control.
+- **Stripe CLI**: (Optional but recommended) for local webhook testing.
+- **Firebase Account**: Access to the CopilotAI Google Cloud / Firebase project.
 
 ---
 
-## 🛠 1. Local Installation
+## 🛠 1. Local Environment Initialization
 
-```bash
-# Clone the repository
-git clone <your-repo-url>
-cd copilotai-landing
+1. **Clone the repository:**
+   ```bash
+   git clone <your-repo-url>
+   cd copilotai-landing
+   ```
 
-# Install dependencies
-npm install
-```
+2. **Install Node modules:**
+   ```bash
+   npm install
+   ```
 
 ---
 
-## 🔑 2. Environment Configuration
+## 🔑 2. Environment Variables & API Keys
 
-Create a `.env` file in the root directory. Use the template below:
+Create a `.env.local` file in the root directory. **Never commit this file to version control.**
 
 ```env
-# --- STRIPE ---
+# ==========================================
+# 💳 STRIPE CONFIGURATION
+# ==========================================
+# Secret key from Stripe Dashboard (Developers -> API Keys)
 STRIPE_SECRET_KEY=sk_test_...
+
+# Webhook secret (Generated via Stripe CLI or Dashboard Webhooks section)
 STRIPE_WEBHOOK_SECRET=whsec_...
+
+# Public key for frontend elements
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
 
-# --- FIREBASE (Client Side) ---
-NEXT_PUBLIC_FIREBASE_API_KEY=...
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=...
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=...
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=...
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
-NEXT_PUBLIC_FIREBASE_APP_ID=...
-NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=...
+# Product Price IDs (Create products in Stripe Dashboard)
+NEXT_PUBLIC_STRIPE_PRO_PRICE_ID=price_1P...
+NEXT_PUBLIC_STRIPE_ELITE_PRICE_ID=price_1Q...
 
-# --- DATABASE (Optional) ---
-DATABASE_URL="postgresql://user:password@localhost:5432/copilotai"
+# ==========================================
+# 🔥 FIREBASE CONFIGURATION
+# ==========================================
+# Get these from Firebase Console -> Project Settings -> General -> Web App
+NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSy...
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=copilotai-xyz.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=copilotai-xyz
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=copilotai-xyz.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
+NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789:web:abcdef
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=G-ABCDEF
 
-# --- APP ---
+# ==========================================
+# 🗄 DATABASE CONFIGURATION (Prisma)
+# ==========================================
+# Connection string (e.g., Supabase Transaction pooler)
+DATABASE_URL="postgresql://postgres:[PASSWORD]@db.[PROJECT-ID].supabase.co:6543/postgres?pgbouncer=true"
+# Direct connection for Prisma migrations
+DIRECT_URL="postgresql://postgres:[PASSWORD]@db.[PROJECT-ID].supabase.co:5432/postgres"
+
+# ==========================================
+# 🌐 APP CONFIGURATION
+# ==========================================
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
-### How to get Firebase Keys:
-1. Go to [Firebase Console](https://console.firebase.google.com/).
-2. Create a new project.
-3. Add a "Web App" to your project.
-4. Copy the `firebaseConfig` values into your `.env` file.
-5. Enable **Authentication** (Email/Password, Google, GitHub).
-6. Enable **Cloud Firestore** and **Storage**.
+---
 
-### How to get Stripe Keys:
-1. Go to [Stripe Dashboard](https://dashboard.stripe.com/test/apikeys).
-2. Copy your **Secret Key** and **Publishable Key**.
-3. Create a **Subscription Product** in the Products section.
-4. Copy the **Price IDs** for your Pro and Elite plans and update them in `components/Pricing.tsx`.
+## 💳 3. Stripe Setup & Testing
+
+To test payments locally, you must forward Stripe webhooks to your local server so the database updates when a subscription is purchased.
+
+1. **Login to Stripe CLI:**
+   ```bash
+   stripe login
+   ```
+2. **Listen for Webhooks:**
+   ```bash
+   stripe listen --forward-to localhost:3000/api/checkout
+   ```
+3. Copy the `whsec_...` secret output by the command above and place it in your `.env.local` under `STRIPE_WEBHOOK_SECRET`.
 
 ---
 
-## 🗄 3. Database Initialization (Prisma)
+## 🗄 4. Database Initialization (Prisma)
 
-If you intend to use the local PostgreSQL database alongside Firebase:
+If your task involves modifying the relational schema or you are setting up a fresh local DB instance:
 
-```bash
-# Push the schema to your database
-npx prisma db push
-
-# Generate the Prisma client
-npx prisma generate
-```
+1. **Push schema to the database (Warning: can cause data loss in dev if schemas conflict):**
+   ```bash
+   npx prisma db push
+   ```
+2. **Generate the local Prisma Client:**
+   ```bash
+   npx prisma generate
+   ```
 
 ---
 
-## 🏃 4. Running the Project
+## 🏃 5. Development Workflow
 
-### Development Mode
+Start the Next.js development server:
 ```bash
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+The application will be available at [http://localhost:3000](http://localhost:3000).
 
-### Production Build
-```bash
-npm run build
-npm run start
-```
+### Common Tasks
+- **Linting**: Run `npm run lint` before committing to catch generic errors.
+- **Adding Images**: Ensure any external domains used for `next/image` are added to the `remotePatterns` array in `next.config.mjs`.
 
 ---
 
-## 📦 5. Deployment (Vercel)
+## 📦 6. Deployment Protocol
 
-1. Push your code to GitHub.
-2. Import the project in [Vercel](https://vercel.com/new).
-3. Add all environment variables from your `.env` file to Vercel's Project Settings.
-4. Deploy!
-
----
-
-## 🤝 6. Troubleshooting
-
-- **Image Errors**: If images don't load, ensure the domain is added to the `images.remotePatterns` array in `next.config.js`.
-- **Firebase Auth Errors**: Ensure that the "Authorized Domains" list in Firebase Authentication includes your deployment URL (e.g., `yourapp.vercel.app`).
-- **Stripe Checkout**: Ensure your `NEXT_PUBLIC_APP_URL` is correctly set to your production URL in production.
-
----
-
-**Proprietary License** © 2026 CopilotAI. All rights reserved.
+When deploying to Vercel or similar platforms:
+1. Ensure all variables from `.env.local` are added to the production environment settings.
+2. Ensure `NEXT_PUBLIC_APP_URL` is updated to the live domain (e.g., `https://copilotai.com`).
+3. Update the Firebase "Authorized Domains" list in the Firebase Console (Authentication section) to include your live domain, otherwise, user logins will fail.
+4. Add the live webhook endpoint to the Stripe Dashboard and update the production `STRIPE_WEBHOOK_SECRET`.

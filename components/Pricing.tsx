@@ -30,7 +30,8 @@ const PLANS = [
       "Resume-Aware Answers",
       "Invisible to Screen Share",
     ],
-    priceId: "price_1P... (example)",
+    // TODO: Replace with your actual Stripe Price ID for the PRO plan in .env.local
+    priceId: process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID || "price_1P_mock_pro",
     popular: true,
   },
   {
@@ -44,7 +45,8 @@ const PLANS = [
       "24/7 Priority Support",
       "Personal Onboarding",
     ],
-    priceId: "price_1Q... (example)",
+    // TODO: Replace with your actual Stripe Price ID for the ELITE plan in .env.local
+    priceId: process.env.NEXT_PUBLIC_STRIPE_ELITE_PRICE_ID || "price_1Q_mock_elite",
   },
 ];
 

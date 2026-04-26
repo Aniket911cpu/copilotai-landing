@@ -9,9 +9,9 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-20">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <Link href="/" className="flex items-center gap-2 mb-6">
-              <div className="w-8 h-8 rounded-lg bg-accent-primary flex items-center justify-center text-white">
-                <Bot size={20} />
+            <Link href="/" className="flex items-center gap-2 mb-6 group">
+              <div className="w-10 h-10 rounded-xl bg-transparent flex items-center justify-center text-white border border-white/5 shadow-[0_0_15px_rgba(79,70,229,0.2)] group-hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all">
+                <img src="/logo.svg" alt="CopilotAI" className="w-6 h-6" />
               </div>
               <span className="text-xl font-bold gradient-text">CopilotAI</span>
             </Link>

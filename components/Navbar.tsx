@@ -40,9 +40,9 @@ export default function Navbar() {
       >
         <div className="container mx-auto flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 rounded-xl bg-accent-primary flex items-center justify-center text-white shadow-lg shadow-accent-primary/20 group-hover:scale-110 transition-transform">
-              <Image src="/logo.svg" alt="CopilotAI" width={24} height={24} />
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="w-12 h-12 rounded-xl bg-transparent flex items-center justify-center text-white shadow-[0_0_20px_rgba(79,70,229,0.3)] group-hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] group-hover:scale-105 transition-all border border-white/5">
+              <Image src="/logo.svg" alt="CopilotAI" width={32} height={32} />
             </div>
             <span className="text-xl font-bold tracking-tight text-white">
               Copilot<span className="gradient-text">AI</span>

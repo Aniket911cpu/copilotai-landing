@@ -3,16 +3,16 @@
 @tailwind utilities;
 
 :root {
-  --bg-base: #0D0D14;
-  --bg-surface: #13131E;
-  --bg-elevated: #1A1A2E;
-  --accent-primary: #6366F1;
-  --accent-violet: #8B5CF6;
-  --accent-cyan: #22D3EE;
+  --bg-base: #050508;
+  --bg-surface: #0A0A0F;
+  --bg-elevated: #12121A;
+  --accent-primary: #4F46E5;
+  --accent-violet: #7C3AED;
+  --accent-cyan: #06B6D4;
   --accent-green: #10B981;
-  --accent-rose: #F43F5E;
-  --text-primary: #E8E8F0;
-  --text-muted: rgba(232, 232, 240, 0.55);
+  --accent-rose: #E11D48;
+  --text-primary: #F8FAFC;
+  --text-muted: #94A3B8;
 }
 
 * {
@@ -30,25 +30,29 @@ body {
   color: var(--text-primary);
   font-family: var(--font-inter), sans-serif;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @layer components {
   .glass-card {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, #6366F1, #8B5CF6, #22D3EE);
+    background: linear-gradient(135deg, #A5B4FC 0%, #818CF8 50%, #C084FC 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .gradient-border-indigo {
-    border: 1px solid rgba(99, 102, 241, 0.3);
+    border: 1px solid rgba(79, 70, 229, 0.2);
   }
 }
 

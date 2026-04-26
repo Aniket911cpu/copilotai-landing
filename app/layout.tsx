@@ -30,6 +30,10 @@ export const metadata: Metadata = {
     title: "CopilotAI — Real-Time AI Interview Copilot",
     description: "AI-powered interview assistant. Detects questions, streams answers, invisible to screen share.",
   },
+  icons: {
+    icon: "/logo.svg",
+    apple: "/logo.svg",
+  },
 };
 
 export default function RootLayout({
