@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 const COMPARISON_DATA = [
   { feature: "Invisible to Screen Share", copilot: true, others: false },
   { feature: "Invisible to Screen Recording", copilot: true, others: false },
-  { feature: "Sub-800ms Latency", copilot: true, others: false },
+  { feature: "Sub-80ms Latency", copilot: true, others: false },
   { feature: "Direct Audio Capture (System)", copilot: true, others: false },
   { feature: "Resume-Aware Answers", copilot: true, others: "Partial" },
   { feature: "Code-signed & Secure", copilot: true, others: "Varies" },
@@ -82,7 +82,7 @@ export default function Comparison() {
               </tbody>
             </table>
           </div>
-          
+
           <div className="mt-12 p-8 rounded-3xl bg-accent-rose/5 border border-accent-rose/20 flex flex-col md:flex-row items-center gap-6">
             <div className="w-12 h-12 rounded-full bg-accent-rose/10 flex items-center justify-center text-accent-rose flex-shrink-0">
               <ShieldAlert size={24} />

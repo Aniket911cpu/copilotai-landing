@@ -103,14 +103,14 @@ export default function Hero() {
             </motion.p>
 
             <motion.div variants={itemVariants} className="flex flex-wrap gap-4 mb-12">
-              <Link 
+              <Link
                 href="/download"
                 className="px-8 py-4 bg-accent-primary hover:bg-accent-primary/90 text-white rounded-2xl font-bold flex items-center gap-2 transition-all shadow-xl shadow-accent-primary/30 hover:scale-[1.02] active:scale-[0.98]"
               >
                 ⬇ Download Free
                 <ArrowRight size={20} />
               </Link>
-              <button 
+              <button
                 onClick={() => setShowVideo(true)}
                 className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-bold flex items-center gap-2 transition-all border border-white/10 hover:scale-[1.02]"
               >
@@ -131,7 +131,7 @@ export default function Hero() {
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 size={18} className="text-accent-violet" />
-                &lt; 800ms response
+                &lt; 80ms response
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 size={18} className="text-accent-cyan" />
@@ -151,13 +151,13 @@ export default function Hero() {
               <div className="rounded-[24px] bg-bg-surface overflow-hidden border border-white/5 aspect-[16/10] relative">
                 {/* Simulated Meeting UI */}
                 <div className="absolute inset-0 bg-[#0A0A12]">
-                  <Image 
-                    src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=1200" 
+                  <Image
+                    src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=1200"
                     alt="Interview Simulation"
                     fill
                     className="object-cover grayscale blur-sm opacity-40"
                   />
-                  
+
                   <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3">
                     {[...Array(6)].map((_, i) => (
                       <div key={i} className={cn("w-10 h-10 rounded-full flex items-center justify-center", i === 3 ? "bg-red-500" : "bg-white/10")}>
@@ -213,7 +213,7 @@ export default function Hero() {
               <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-4xl aspect-video glass-card overflow-hidden z-[101] p-0 border-white/10">
                 <div className="w-full h-full bg-black flex items-center justify-center text-white/20 font-bold">
                   Demo Video Placeholder
-                  <button 
+                  <button
                     onClick={() => setShowVideo(false)}
                     className="absolute top-4 right-4 text-white/50 hover:text-white"
                   >

@@ -2,12 +2,12 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { 
-  Ghost, 
-  Zap, 
-  FileText, 
-  Code2, 
-  Target, 
+import {
+  Ghost,
+  Zap,
+  FileText,
+  Code2,
+  Target,
   BarChart3,
   Shield,
   Globe,
@@ -25,7 +25,7 @@ const DETAILED_FEATURES = [
   {
     icon: Zap,
     title: "Sub-Second Latency Pipeline",
-    description: "Experience true real-time assistance. From the moment an interviewer finishes their sentence to the moment the first token appears on your screen is consistently under 800ms.",
+    description: "Experience true real-time assistance. From the moment an interviewer finishes their sentence to the moment the first token appears on your screen is consistently under 80ms.",
     category: "Performance",
     color: "bg-accent-violet/15 text-accent-violet",
   },

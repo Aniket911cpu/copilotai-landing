@@ -13,7 +13,7 @@ const FAQS = [
   },
   {
     q: "How fast does it respond?",
-    a: "The end-to-end pipeline from question detection to first word on screen takes under 800ms on average — fast enough to stay ahead of natural speaking pace.",
+    a: "The end-to-end pipeline from question detection to first word on screen takes under 80ms on average — fast enough to stay ahead of natural speaking pace.",
   },
   {
     q: "Does it use my actual resume?",

@@ -20,7 +20,7 @@ const STEPS = [
   {
     icon: MessageSquare,
     title: "It Answers",
-    body: "GPT-4.1 streams a personalized answer to the floating overlay in under 800ms.",
+    body: "GPT-4.1 streams a personalized answer to the floating overlay in under 80ms.",
     color: "accent-cyan",
   },
 ];
@@ -126,7 +126,7 @@ export default function HowItWorks() {
           className="mt-24 p-10 glass-card max-w-md mx-auto text-center border-accent-cyan/20"
         >
           <div className="text-5xl font-bold gradient-text mb-2">
-            &lt; 800ms
+            &lt; 80ms
           </div>
           <div className="text-xs font-bold text-text-muted uppercase tracking-[0.3em]">
             Avg End-to-End Latency

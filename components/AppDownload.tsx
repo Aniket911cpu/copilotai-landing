@@ -16,7 +16,7 @@ export default function AppDownload() {
         <div className="glass-card p-12 md:p-20 relative overflow-hidden border-white/10">
           {/* Background Glow */}
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent-violet/10 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
-          
+
           <div className="grid lg:grid-cols-2 gap-16 items-center relative z-10">
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent-violet/10 border border-accent-violet/20 text-accent-violet text-xs font-bold uppercase tracking-widest mb-8">
@@ -28,11 +28,11 @@ export default function AppDownload() {
                 <span className="gradient-text">Complete Stealth.</span>
               </h2>
               <p className="text-lg text-text-muted mb-10 leading-relaxed">
-                Download the CopilotAI desktop application to enable real-time audio capture, invisible overlays, and sub-800ms latency. Sync your account once and win every interview.
+                Download the CopilotAI desktop application to enable real-time audio capture, invisible overlays, and sub-80ms latency. Sync your account once and win every interview.
               </p>
-              
+
               <div className="flex flex-wrap gap-4 mb-8">
-                <Link 
+                <Link
                   href="/download"
                   className={cn(
                     "flex items-center gap-3 px-8 py-4 rounded-2xl font-bold transition-all group",
@@ -45,7 +45,7 @@ export default function AppDownload() {
                     <div className="text-base leading-none">macOS</div>
                   </div>
                 </Link>
-                <Link 
+                <Link
                   href="/download"
                   className={cn(
                     "flex items-center gap-3 px-8 py-4 rounded-2xl font-bold transition-all group",
@@ -94,7 +94,7 @@ export default function AppDownload() {
                     </div>
                     <div className="text-[10px] font-mono text-white/30 tracking-widest uppercase">CopilotAI v2.4.1</div>
                   </div>
-                  
+
                   <div className="space-y-6">
                     <div className="h-4 w-3/4 bg-white/5 rounded-full" />
                     <div className="h-4 w-1/2 bg-white/5 rounded-full" />
@@ -110,7 +110,7 @@ export default function AppDownload() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="absolute bottom-6 left-6 right-6">
                     <div className="p-4 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
                       <span className="text-xs text-text-muted">Audio Input: {currentOS === "macos" ? "MacBook Pro Mic" : "System Audio"}</span>

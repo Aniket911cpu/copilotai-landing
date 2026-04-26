@@ -84,7 +84,7 @@ export default function Testimonials() {
             <div className="text-sm text-text-muted uppercase tracking-widest">Offer Rate Reported</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-white mb-1">&lt; 800ms</div>
+            <div className="text-3xl font-bold text-white mb-1">&lt; 80ms</div>
             <div className="text-sm text-text-muted uppercase tracking-widest">Avg Response</div>
           </div>
         </div>

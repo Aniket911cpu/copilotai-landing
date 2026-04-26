@@ -25,7 +25,7 @@ const PLANS = [
     description: "Most popular for job seekers.",
     features: [
       "Everything in Free",
-      "Sub-800ms Latency",
+      "Sub-80ms Latency",
       "GPT-4.1 Powered",
       "Resume-Aware Answers",
       "Invisible to Screen Share",
@@ -155,8 +155,8 @@ export default function Pricing() {
                 disabled={loadingPriceId === plan.priceId}
                 className={cn(
                   "w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all",
-                  plan.popular 
-                    ? "bg-accent-primary text-white hover:bg-accent-primary/90 shadow-lg shadow-accent-primary/30" 
+                  plan.popular
+                    ? "bg-accent-primary text-white hover:bg-accent-primary/90 shadow-lg shadow-accent-primary/30"
                     : "bg-white/5 text-white hover:bg-white/10 border border-white/10"
                 )}
               >
