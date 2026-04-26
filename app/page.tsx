@@ -9,6 +9,8 @@ import SocialProof from "@/components/SocialProof";
 const Problem = dynamic(() => import("@/components/Problem"), { ssr: false });
 const HowItWorks = dynamic(() => import("@/components/HowItWorks"), { ssr: false });
 const Features = dynamic(() => import("@/components/Features"), { ssr: false });
+const AppDownload = dynamic(() => import("@/components/AppDownload"), { ssr: false });
+const Comparison = dynamic(() => import("@/components/Comparison"), { ssr: false });
 const DemoMockup = dynamic(() => import("@/components/DemoMockup"), { ssr: false });
 const Pricing = dynamic(() => import("@/components/Pricing"), { ssr: false });
 const Testimonials = dynamic(() => import("@/components/Testimonials"), { ssr: false });
@@ -30,6 +32,8 @@ export default function Home() {
           <Problem />
           <HowItWorks />
           <Features />
+          <AppDownload />
+          <Comparison />
           <DemoMockup />
           <Pricing />
           <Testimonials />

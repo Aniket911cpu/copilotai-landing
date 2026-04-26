@@ -5,17 +5,22 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowRight, Bot } from "lucide-react";
 import { cn } from "@/lib/utils";
+import AuthSection from "./AuthSection";
+import AccountSection from "./AccountSection";
 
 const NavLinks = [
   { name: "Features", href: "#features" },
   { name: "Pricing", href: "#pricing" },
   { name: "Support", href: "#support" },
-  { name: "How it Works", href: "#how-it-works" },
+  { name: "Download", href: "#download" },
 ];
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"SIGN_IN" | "REGISTER" | null>(null);
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Simulated state
 
   useEffect(() => {
     const handleScroll = () => {
@@ -59,14 +64,35 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden md:flex items-center gap-4">
-          <button className="px-5 py-2 text-sm font-medium text-text-muted hover:text-text-primary transition-colors">
-            Sign In
-          </button>
-          <button className="px-6 py-2.5 bg-accent-primary hover:bg-accent-primary/90 text-white rounded-full text-sm font-semibold flex items-center gap-2 transition-all shadow-lg shadow-accent-primary/20">
-            Download Free
-            <ArrowRight size={16} />
-          </button>
+          {isLoggedIn ? (
+            <button 
+              onClick={() => setIsAccountOpen(true)}
+              className="flex items-center gap-3 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 transition-all group"
+            >
+              <div className="w-6 h-6 rounded-full bg-accent-primary flex items-center justify-center text-[10px] font-bold text-white">AM</div>
+              <span className="text-sm font-medium text-text-muted group-hover:text-white">Account</span>
+            </button>
+          ) : (
+            <>
+              <button 
+                onClick={() => setAuthMode("SIGN_IN")}
+                className="px-5 py-2 text-sm font-medium text-text-muted hover:text-text-primary transition-colors"
+              >
+                Sign In
+              </button>
+              <button 
+                onClick={() => setAuthMode("REGISTER")}
+                className="px-6 py-2.5 bg-accent-primary hover:bg-accent-primary/90 text-white rounded-full text-sm font-semibold flex items-center gap-2 transition-all shadow-lg shadow-accent-primary/20"
+              >
+                Get Started
+                <ArrowRight size={16} />
+              </button>
+            </>
+          )}
         </div>
+
+        <AuthSection mode={authMode} setMode={setAuthMode} />
+        <AccountSection isOpen={isAccountOpen} setIsOpen={setIsAccountOpen} />
 
         {/* Mobile Toggle */}
         <button
