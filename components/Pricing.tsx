@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Check, ShieldCheck } from "lucide-react";
+import { Check, ShieldCheck, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const TIER_FEATURES = {
@@ -31,12 +31,41 @@ const TIER_FEATURES = {
   ],
 };
 
+const PRICE_IDS = {
+  PRO: "price_123_pro", // Replace with real Stripe Price IDs
+  ELITE: "price_123_elite",
+};
+
 export default function Pricing() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("yearly");
+  const [loading, setLoading] = useState<string | null>(null);
 
   const getPrice = (monthly: number) => {
     if (billingCycle === "monthly") return monthly;
     return Math.floor(monthly * 0.8); // 20% discount
+  };
+
+  const onCheckout = async (plan: "PRO" | "ELITE") => {
+    try {
+      setLoading(plan);
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          priceId: PRICE_IDS[plan],
+          planName: plan,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error("Checkout error:", error);
+    } finally {
+      setLoading(null);
+    }
   };
 
   return (
@@ -88,6 +117,8 @@ export default function Pricing() {
             cta="Start Pro Free Trial"
             popular
             accentColor="accent-primary"
+            isLoading={loading === "PRO"}
+            onClick={() => onCheckout("PRO")}
           />
 
           {/* ELITE */}
@@ -97,6 +128,8 @@ export default function Pricing() {
             features={TIER_FEATURES.ELITE}
             cta="Go Elite"
             accentColor="accent-violet"
+            isLoading={loading === "ELITE"}
+            onClick={() => onCheckout("ELITE")}
           />
         </div>
 
@@ -118,6 +151,8 @@ function PricingCard({
   cta,
   popular = false,
   accentColor = "white/10",
+  isLoading = false,
+  onClick,
 }: {
   title: string;
   price: number;
@@ -125,6 +160,8 @@ function PricingCard({
   cta: string;
   popular?: boolean;
   accentColor?: string;
+  isLoading?: boolean;
+  onClick?: () => void;
 }) {
   return (
     <motion.div
@@ -162,13 +199,17 @@ function PricingCard({
       </div>
 
       <button
+        onClick={onClick}
+        disabled={isLoading || price === 0}
         className={cn(
-          "w-full py-4 rounded-xl font-bold transition-all",
+          "w-full py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2",
           popular
             ? "bg-accent-primary text-white hover:bg-accent-primary/90 shadow-lg shadow-accent-primary/20"
-            : "bg-white/5 text-white hover:bg-white/10 border border-white/10"
+            : "bg-white/5 text-white hover:bg-white/10 border border-white/10",
+          (isLoading || price === 0) && "opacity-50 cursor-not-allowed"
         )}
       >
+        {isLoading && <Loader2 size={18} className="animate-spin" />}
         {cta}
       </button>
     </motion.div>

@@ -7,10 +7,10 @@ import { Menu, X, ArrowRight, Bot } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NavLinks = [
-  { name: "Features", href: "#features" },
-  { name: "Pricing", href: "#pricing" },
-  { name: "FAQ", href: "#faq" },
-  { name: "Docs", href: "#docs" },
+  { name: "Features", href: "/features" },
+  { name: "Pricing", href: "/pricing" },
+  { name: "FAQ", href: "/#faq" },
+  { name: "Docs", href: "/docs" },
 ];
 
 export default function Navbar() {
