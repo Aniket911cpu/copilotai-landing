@@ -31,8 +31,13 @@ export const metadata: Metadata = {
     description: "AI-powered interview assistant. Detects questions, streams answers, invisible to screen share.",
   },
   icons: {
-    icon: "/logo.svg",
-    apple: "/logo.svg",
+    icon: [
+      { url: "/logo.svg", type: "image/svg+xml" },
+    ],
+    shortcut: ["/logo.svg"],
+    apple: [
+      { url: "/logo.svg" },
+    ],
   },
 };
 
