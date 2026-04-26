@@ -29,7 +29,7 @@ export default function Comparison() {
             <span className="gradient-text">Created Equal.</span>
           </motion.h2>
           <p className="text-lg text-text-muted">
-            Most "AI helpers" are easily detected by modern interview platforms. CopilotAI is built on a custom low-level engine designed for absolute stealth.
+            Most &quot;AI helpers&quot; are easily detected by modern interview platforms. CopilotAI is built on a custom low-level engine designed for absolute stealth.
           </p>
         </div>
 

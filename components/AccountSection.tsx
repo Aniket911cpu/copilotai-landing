@@ -18,6 +18,9 @@ import {
 } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { cn } from "@/lib/utils";
+import { auth, db } from "@/lib/firebase";
+import { signOut } from "firebase/auth";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 type Tab = "PROFILE" | "BILLING" | "SESSIONS" | "APP_SETTINGS";
 
@@ -29,6 +32,12 @@ export default function AccountSection({
   setIsOpen: (open: boolean) => void 
 }) {
   const [activeTab, setActiveTab] = useState<Tab>("PROFILE");
+  const user = auth.currentUser;
+
+  const handleSignOut = async () => {
+    await signOut(auth);
+    setIsOpen(false);
+  };
 
   const SESSIONS = [
     { id: 1, title: "Google - Senior Frontend Engineer", date: "2026-04-20", score: 94 },
@@ -45,9 +54,17 @@ export default function AccountSection({
           {/* Sidebar */}
           <aside className="w-64 border-r border-white/5 bg-white/[0.02] p-6 flex flex-col">
             <div className="flex items-center gap-3 mb-10 px-2">
-              <div className="w-10 h-10 rounded-full bg-accent-primary flex items-center justify-center text-white font-bold">AM</div>
+              {user?.photoURL ? (
+                <img src={user.photoURL} alt="Profile" className="w-10 h-10 rounded-full" />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-accent-primary flex items-center justify-center text-white font-bold">
+                  {user?.email?.charAt(0).toUpperCase()}
+                </div>
+              )}
               <div>
-                <div className="text-sm font-bold text-white leading-tight">Arjun M.</div>
+                <div className="text-sm font-bold text-white leading-tight truncate max-w-[120px]">
+                  {user?.displayName || user?.email?.split("@")[0]}
+                </div>
                 <div className="text-[10px] text-text-muted uppercase tracking-widest">Pro Member</div>
               </div>
             </div>
@@ -59,7 +76,10 @@ export default function AccountSection({
               <NavButton icon={Settings} label="App Settings" active={activeTab === "APP_SETTINGS"} onClick={() => setActiveTab("APP_SETTINGS")} />
             </nav>
 
-            <button className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-accent-rose hover:bg-accent-rose/10 rounded-xl transition-all mt-auto">
+            <button 
+              onClick={handleSignOut}
+              className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-accent-rose hover:bg-accent-rose/10 rounded-xl transition-all mt-auto"
+            >
               <LogOut size={18} />
               Sign Out
             </button>
@@ -83,16 +103,17 @@ export default function AccountSection({
               {activeTab === "PROFILE" && (
                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
                   <div className="grid grid-cols-2 gap-6">
-                    <Field label="First Name" value="Arjun" />
-                    <Field label="Last Name" value="M." />
-                    <Field label="Email Address" value="arjun@example.com" />
-                    <Field label="Location" value="San Francisco, CA" />
+                    <Field label="Full Name" value={user?.displayName || "N/A"} />
+                    <Field label="Email Address" value={user?.email || "N/A"} />
+                    <Field label="Provider" value={user?.providerData[0]?.providerId.toUpperCase() || "EMAIL"} />
+                    <Field label="User ID" value={user?.uid.substring(0, 12) + "..."} />
                   </div>
                   <div className="p-6 rounded-2xl bg-white/5 border border-white/5">
                     <h4 className="font-bold mb-4 flex items-center gap-2">
                       <Shield size={18} className="text-accent-primary" />
                       Security
                     </h4>
+                    <p className="text-xs text-text-muted mb-4">You are currently signed in via {user?.providerData[0]?.providerId}.</p>
                     <button className="text-sm text-accent-primary font-bold hover:underline">Change Password</button>
                   </div>
                 </div>

@@ -7,6 +7,8 @@ import { Menu, X, ArrowRight, Bot } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AuthSection from "./AuthSection";
 import AccountSection from "./AccountSection";
+import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 const NavLinks = [
   { name: "Features", href: "#features" },
@@ -20,14 +22,22 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"SIGN_IN" | "REGISTER" | null>(null);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Simulated state
+  const [user, setUser] = useState<FirebaseUser | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      unsubscribe();
+    };
   }, []);
 
   return (
@@ -64,13 +74,21 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden md:flex items-center gap-4">
-          {isLoggedIn ? (
+          {user ? (
             <button 
               onClick={() => setIsAccountOpen(true)}
               className="flex items-center gap-3 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 transition-all group"
             >
-              <div className="w-6 h-6 rounded-full bg-accent-primary flex items-center justify-center text-[10px] font-bold text-white">AM</div>
-              <span className="text-sm font-medium text-text-muted group-hover:text-white">Account</span>
+              {user.photoURL ? (
+                <img src={user.photoURL} alt="Profile" className="w-6 h-6 rounded-full" />
+              ) : (
+                <div className="w-6 h-6 rounded-full bg-accent-primary flex items-center justify-center text-[10px] font-bold text-white">
+                  {user.email?.charAt(0).toUpperCase()}
+                </div>
+              )}
+              <span className="text-sm font-medium text-text-muted group-hover:text-white">
+                {user.displayName || "Account"}
+              </span>
             </button>
           ) : (
             <>

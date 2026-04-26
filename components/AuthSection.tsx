@@ -10,10 +10,19 @@ import {
   ArrowRight,
   Loader2,
   Github,
-  Chrome
+  Chrome,
+  AlertCircle
 } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { cn } from "@/lib/utils";
+import { 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  signInWithPopup, 
+  GoogleAuthProvider,
+  GithubAuthProvider 
+} from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 type AuthMode = "SIGN_IN" | "REGISTER" | null;
 
@@ -25,16 +34,43 @@ export default function AuthSection({
   setMode: (mode: AuthMode) => void 
 }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate Auth
-    setTimeout(() => {
-      setIsLoading(false);
+    setError(null);
+    
+    try {
+      if (mode === "SIGN_IN") {
+        await signInWithEmailAndPassword(auth, email, password);
+      } else {
+        await createUserWithEmailAndPassword(auth, email, password);
+        // Here you would also update the user profile with the name
+      }
       setMode(null);
-      // In a real app, we would use signIn() from next-auth
-    }, 1500);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSocialAuth = async (providerName: "GOOGLE" | "GITHUB") => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const provider = providerName === "GOOGLE" ? new GoogleAuthProvider() : new GithubAuthProvider();
+      await signInWithPopup(auth, provider);
+      setMode(null);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -53,11 +89,17 @@ export default function AuthSection({
 
           <div className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
-              <button className="flex items-center justify-center gap-2 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all text-sm font-medium">
+              <button 
+                onClick={() => handleSocialAuth("GITHUB")}
+                className="flex items-center justify-center gap-2 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all text-sm font-medium"
+              >
                 <Github size={18} />
                 GitHub
               </button>
-              <button className="flex items-center justify-center gap-2 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all text-sm font-medium">
+              <button 
+                onClick={() => handleSocialAuth("GOOGLE")}
+                className="flex items-center justify-center gap-2 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all text-sm font-medium"
+              >
                 <Chrome size={18} />
                 Google
               </button>
@@ -70,7 +112,14 @@ export default function AuthSection({
               <span className="relative px-4 bg-bg-surface text-xs text-text-muted uppercase tracking-widest">Or continue with email</span>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <div className="p-4 rounded-xl bg-accent-rose/10 border border-accent-rose/20 text-accent-rose text-xs flex items-start gap-3">
+                <AlertCircle size={16} className="shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleEmailAuth} className="space-y-4">
               {mode === "REGISTER" && (
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-text-muted">Full Name</label>
@@ -78,6 +127,8 @@ export default function AuthSection({
                     <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20" size={18} />
                     <input 
                       type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                       className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:border-accent-primary transition-colors placeholder:text-white/20"
                       placeholder="John Doe"
                       required
@@ -92,6 +143,8 @@ export default function AuthSection({
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20" size={18} />
                   <input 
                     type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:border-accent-primary transition-colors placeholder:text-white/20"
                     placeholder="name@example.com"
                     required
@@ -110,6 +163,8 @@ export default function AuthSection({
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20" size={18} />
                   <input 
                     type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:border-accent-primary transition-colors placeholder:text-white/20"
                     placeholder="••••••••"
                     required
@@ -129,7 +184,7 @@ export default function AuthSection({
             <div className="text-center text-sm text-text-muted">
               {mode === "SIGN_IN" ? (
                 <>
-                  Don't have an account?{" "}
+                  Don&apos;t have an account?{" "}
                   <button onClick={() => setMode("REGISTER")} className="text-accent-primary font-bold hover:underline">Register</button>
                 </>
               ) : (
