@@ -19,18 +19,18 @@ export default function Footer() {
               The AI edge for every interview. Ace your next round with real-time assistance.
             </p>
             <div className="flex gap-4">
-              <Link href="#" className="text-text-muted hover:text-white transition-colors">
+              <a href="https://twitter.com/copilotai" target="_blank" rel="noopener noreferrer" className="text-text-muted hover:text-white transition-colors">
                 <Twitter size={20} />
-              </Link>
-              <Link href="#" className="text-text-muted hover:text-white transition-colors">
+              </a>
+              <a href="https://github.com/copilotai" target="_blank" rel="noopener noreferrer" className="text-text-muted hover:text-white transition-colors">
                 <Github size={20} />
-              </Link>
-              <Link href="#" className="text-text-muted hover:text-white transition-colors">
+              </a>
+              <a href="https://linkedin.com/company/copilotai" target="_blank" rel="noopener noreferrer" className="text-text-muted hover:text-white transition-colors">
                 <Linkedin size={20} />
-              </Link>
-              <Link href="#" className="text-text-muted hover:text-white transition-colors">
+              </a>
+              <a href="mailto:hello@copilotai.com" className="text-text-muted hover:text-white transition-colors">
                 <MessageSquare size={20} />
-              </Link>
+              </a>
             </div>
           </div>
 
@@ -38,20 +38,20 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-bold mb-6">Product</h4>
             <ul className="space-y-4">
-              <li><Link href="#features" className="text-text-muted hover:text-white text-sm transition-colors">Features</Link></li>
-              <li><Link href="#pricing" className="text-text-muted hover:text-white text-sm transition-colors">Pricing</Link></li>
-              <li><Link href="#" className="text-text-muted hover:text-white text-sm transition-colors">Download</Link></li>
-              <li><Link href="#" className="text-text-muted hover:text-white text-sm transition-colors">Changelog</Link></li>
+              <li><Link href="/features" className="text-text-muted hover:text-white text-sm transition-colors">Features</Link></li>
+              <li><Link href="/#pricing" className="text-text-muted hover:text-white text-sm transition-colors">Pricing</Link></li>
+              <li><Link href="/download" className="text-text-muted hover:text-white text-sm transition-colors">Download</Link></li>
+              <li><Link href="/changelog" className="text-text-muted hover:text-white text-sm transition-colors">Changelog</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-white font-bold mb-6">Support</h4>
             <ul className="space-y-4">
-              <li><Link href="#support" className="text-text-muted hover:text-white text-sm transition-colors">Report a Bug</Link></li>
-              <li><Link href="#support" className="text-text-muted hover:text-white text-sm transition-colors">Submit Testimonial</Link></li>
-              <li><Link href="#support" className="text-text-muted hover:text-white text-sm transition-colors">General Feedback</Link></li>
-              <li><Link href="#faq" className="text-text-muted hover:text-white text-sm transition-colors">FAQ</Link></li>
+              <li><Link href="/support#bug-report" className="text-text-muted hover:text-white text-sm transition-colors">Report a Bug</Link></li>
+              <li><Link href="/support#testimonial" className="text-text-muted hover:text-white text-sm transition-colors">Submit Testimonial</Link></li>
+              <li><Link href="/support#feedback" className="text-text-muted hover:text-white text-sm transition-colors">General Feedback</Link></li>
+              <li><Link href="/support#faq" className="text-text-muted hover:text-white text-sm transition-colors">FAQ</Link></li>
             </ul>
           </div>
 
@@ -59,11 +59,11 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-bold mb-6">Company</h4>
             <ul className="space-y-4">
-              <li><Link href="#" className="text-text-muted hover:text-white text-sm transition-colors">About</Link></li>
-              <li><Link href="#" className="text-text-muted hover:text-white text-sm transition-colors">Blog</Link></li>
-              <li><Link href="#" className="text-text-muted hover:text-white text-sm transition-colors">Privacy Policy</Link></li>
-              <li><Link href="#" className="text-text-muted hover:text-white text-sm transition-colors">Terms of Service</Link></li>
-              <li><Link href="#" className="text-text-muted hover:text-white text-sm transition-colors">Contact</Link></li>
+              <li><Link href="/about" className="text-text-muted hover:text-white text-sm transition-colors">About</Link></li>
+              <li><Link href="/blog" className="text-text-muted hover:text-white text-sm transition-colors">Blog</Link></li>
+              <li><Link href="/privacy" className="text-text-muted hover:text-white text-sm transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="text-text-muted hover:text-white text-sm transition-colors">Terms of Service</Link></li>
+              <li><Link href="/contact" className="text-text-muted hover:text-white text-sm transition-colors">Contact</Link></li>
             </ul>
           </div>
         </div>

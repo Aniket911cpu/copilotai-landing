@@ -11,9 +11,9 @@ import Image from "next/image";
 import { useAuth } from "@/lib/AuthContext";
 
 const NavLinks = [
-  { name: "Features", href: "#features" },
-  { name: "Pricing", href: "#pricing" },
-  { name: "Support", href: "#support" },
+  { name: "Features", href: "/features" },
+  { name: "Support", href: "/support" },
+  { name: "Changelog", href: "/changelog" },
   { name: "Download", href: "/download" },
 ];
 

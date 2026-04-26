@@ -31,7 +31,7 @@ const DOWNLOADS = [
     format: ".exe",
     color: "text-blue-400",
     bgColor: "bg-blue-400/10",
-    url: "#",
+    url: "/CopilotAI-Setup.exe",
   },
   {
     id: "macos",
@@ -42,7 +42,7 @@ const DOWNLOADS = [
     format: ".dmg",
     color: "text-white",
     bgColor: "bg-white/10",
-    url: "#",
+    url: "/CopilotAI-macOS.dmg",
   },
   {
     id: "linux",
@@ -53,13 +53,22 @@ const DOWNLOADS = [
     format: ".AppImage",
     color: "text-orange-400",
     bgColor: "bg-orange-400/10",
-    url: "#",
+    url: "/CopilotAI-Linux.AppImage",
   }
 ];
 
 export default function DownloadPage() {
   const currentOS = useOS();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+
+  const handleDownload = (url: string, filename: string) => {
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <main className="relative bg-[#08080C] min-h-screen">
@@ -149,15 +158,19 @@ export default function DownloadPage() {
                 </div>
               </div>
 
-              <button className={cn(
-                "w-full py-4 rounded-xl font-bold flex items-center justify-center gap-3 transition-all",
-                currentOS === dl.id 
-                  ? "bg-accent-primary text-white shadow-xl shadow-accent-primary/20" 
-                  : "bg-white/5 text-white border border-white/10 hover:bg-white/10"
-              )}>
+              <a 
+                href={dl.url}
+                download
+                className={cn(
+                  "w-full py-4 rounded-xl font-bold flex items-center justify-center gap-3 transition-all",
+                  currentOS === dl.id 
+                    ? "bg-accent-primary text-white shadow-xl shadow-accent-primary/20" 
+                    : "bg-white/5 text-white border border-white/10 hover:bg-white/10"
+                )}
+              >
                 Download {dl.format}
                 <Download size={18} />
-              </button>
+              </a>
             </motion.div>
           ))}
         </div>
